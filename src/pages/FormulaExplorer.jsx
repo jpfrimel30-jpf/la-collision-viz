@@ -278,9 +278,12 @@ export default function FormulaExplorer() {
   const computeForPeriod = p =>
     BIAS[p] + [...active].reduce((sum, id) => sum + (WEIGHTS[p][id] ?? 0), 0);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const zCurrent = useMemo(() => computeForPeriod(period), [active, period]);
   const pCurrent = sigmoid(zCurrent);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const pPre     = useMemo(() => sigmoid(computeForPeriod('pre')),  [active]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const pPost    = useMemo(() => sigmoid(computeForPeriod('post')), [active]);
 
   const activeFeatures = FEATURE_GROUPS

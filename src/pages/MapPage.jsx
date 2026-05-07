@@ -4,7 +4,6 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN;
 
-const YEARS = Array.from({ length: 15 }, (_, i) => 2010 + i);
 
 const FILTER_TYPES = [
   { id: 'all',      label: 'All Crashes' },

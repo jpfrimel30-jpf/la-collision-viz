@@ -21,6 +21,7 @@ const Navbar = ({ currentPage, setCurrentPage }) => {
       <ul className="navbar-links">
         {links.map(link => (
           <li key={link.id} className={link.id === 'map' ? 'nav-hide' : ''}>
+            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
             <a
               href="#"
               className={currentPage === link.id ? 'active' : ''}
