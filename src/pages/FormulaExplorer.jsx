@@ -116,8 +116,8 @@ const FEATURE_GROUPS = [
       { id: 'is_hit_and_run',  label: 'Hit-and-run' },
       { id: 'is_intersection', label: 'At an intersection' },
       { id: 'is_unlicensed',   label: 'Unlicensed driver' },
-      { id: 'is_dui_alcohol',  label: 'DUI — alcohol' },
-      { id: 'is_dui_drugs',    label: 'DUI — drugs' },
+      { id: 'is_dui_alcohol',  label: 'DUI — alcohol', footnote: 3 },
+      { id: 'is_dui_drugs',    label: 'DUI — drugs',   footnote: 3 },
     ],
   },
   {
@@ -131,6 +131,7 @@ const FEATURE_GROUPS = [
   },
   {
     label: 'Victim — sex',
+    footnote: 2,
     radioGroup: 'sex',
     note: 'Sex and descent reflect the injured party or primary victim of the crash.',
     features: [
@@ -141,6 +142,7 @@ const FEATURE_GROUPS = [
   },
   {
     label: 'Victim — descent',
+    footnote: 2,
     radioGroup: 'descent',
     features: [
       { id: 'descent_A', label: 'Asian' },
@@ -158,19 +160,19 @@ const FEATURE_GROUPS = [
     grid: true,
     features: [
       { id: 'area_77th Street', label: '77th Street' },
-      { id: 'area_Central',     label: 'Central' },
+      { id: 'area_Central',     label: 'Central',    footnote: 4 },
       { id: 'area_Devonshire',  label: 'Devonshire' },
       { id: 'area_Foothill',    label: 'Foothill' },
       { id: 'area_Harbor',      label: 'Harbor' },
-      { id: 'area_Hollenbeck',  label: 'Hollenbeck' },
+      { id: 'area_Hollenbeck',  label: 'Hollenbeck', footnote: 4 },
       { id: 'area_Hollywood',   label: 'Hollywood' },
       { id: 'area_Mission',     label: 'Mission' },
       { id: 'area_N Hollywood', label: 'N Hollywood' },
-      { id: 'area_Newton',      label: 'Newton' },
-      { id: 'area_Northeast',   label: 'Northeast' },
+      { id: 'area_Newton',      label: 'Newton',     footnote: 4 },
+      { id: 'area_Northeast',   label: 'Northeast',  footnote: 4 },
       { id: 'area_Olympic',     label: 'Olympic' },
       { id: 'area_Pacific',     label: 'Pacific' },
-      { id: 'area_Rampart',     label: 'Rampart' },
+      { id: 'area_Rampart',     label: 'Rampart',    footnote: 4 },
       { id: 'area_Southeast',   label: 'Southeast' },
       { id: 'area_Southwest',   label: 'Southwest' },
       { id: 'area_Topanga',     label: 'Topanga' },
@@ -182,6 +184,7 @@ const FEATURE_GROUPS = [
   },
   {
     label: 'Street corridor',
+    footnote: 2,
     radioGroup: 'corridor',
     grid: true,
     features: [
@@ -314,11 +317,7 @@ export default function FormulaExplorer() {
             between the pre-COVID era (2016–2018 model) and the post-COVID era (2021–2023 model).
           </p>
           <p style={{ marginTop: '0.75rem', fontSize: '0.88rem', fontStyle: 'italic', color: 'var(--text-muted)' }}>
-            The weights and probabilities shown here describe statistical associations learned from LAPD
-            collision records — not causal relationships. A high weight means a feature was predictive
-            of injury in the training data. It does not mean that feature caused the injury, nor that
-            any single factor explains a shift between eras. Multiple interpretations are often valid
-            and cannot be distinguished from the data alone.
+            Weights reflect statistical associations in the training data, not causal relationships. Multiple interpretations of any result are often valid and cannot be distinguished from the data alone.
           </p>
 
         </div>
@@ -346,7 +345,7 @@ export default function FormulaExplorer() {
                   transition: 'all 180ms ease',
                 }}
               >
-                {label}
+                {label}<sup style={{ fontSize: '0.65em', verticalAlign: 'super', marginLeft: '1px' }}>1</sup>
                 <span style={{ display: 'block', fontSize: '0.55rem', opacity: 0.7, marginTop: '0.1rem' }}>
                   {sub}
                 </span>
@@ -405,6 +404,7 @@ export default function FormulaExplorer() {
                 <div style={{ paddingBottom: '0.5rem', borderBottom: '1px solid var(--border-light)', marginBottom: '0.6rem' }}>
                   <div style={{ ...mono, fontSize: '0.58rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text-muted)' }}>
                     {group.label}
+                    {group.footnote && <sup style={{ fontSize: '0.7em', verticalAlign: 'super', marginLeft: '1px' }}>{group.footnote}</sup>}
                     {group.radioGroup && (
                       <span style={{ marginLeft: '0.5rem', opacity: 0.55 }}>· select one</span>
                     )}
@@ -448,6 +448,7 @@ export default function FormulaExplorer() {
                           }} />
                           <span style={{ ...mono, fontSize: '0.63rem', color: on ? 'var(--text)' : 'var(--text-sec)' }}>
                             {f.label}
+                            {f.footnote && <sup style={{ fontSize: '0.7em', verticalAlign: 'super', marginLeft: '1px' }}>{f.footnote}</sup>}
                           </span>
                         </div>
                         <div style={{
@@ -675,16 +676,20 @@ export default function FormulaExplorer() {
               <span><span style={{ color: 'var(--green)', fontWeight: 600 }}>+ weight</span> → increases injury probability</span>
               <span><span style={{ color: 'var(--red)', fontWeight: 600 }}>− weight</span> → decreases injury probability</span>
               <span style={{ marginTop: '0.4rem', opacity: 0.75, lineHeight: 1.5 }}>
+                <sup style={{ fontSize: '0.8em', verticalAlign: 'super', marginRight: '2px' }}>1</sup>
                 Baseline is era-specific: pre-COVID +{BIAS.pre.toFixed(4)}, post-COVID +{BIAS.post.toFixed(4)}. Derived from the 2016–2018 and 2021–2023 training windows respectively.
               </span>
               <span style={{ opacity: 0.75, lineHeight: 1.5 }}>
+                <sup style={{ fontSize: '0.8em', verticalAlign: 'super', marginRight: '2px' }}>2</sup>
                 Corridor features are derived from LAPD incident address strings. Sex and descent reflect the injured party or primary victim of the crash.
               </span>
               <span style={{ opacity: 0.75, lineHeight: 1.5 }}>
+                <sup style={{ fontSize: '0.8em', verticalAlign: 'super', marginRight: '2px' }}>3</sup>
                 DUI — alcohol and DUI — drugs bookings increased roughly 7x in the post-COVID period (2021–2023 vs 2016–2018), while injury rates for each remained nearly identical across eras. The weight changes reflect the volume of additional evidence the model was trained on, not a change in the underlying association.
               </span>
               <span style={{ opacity: 0.75, lineHeight: 1.5 }}>
-                The Rampart division recorded a 99.8% injury rate in the pre-COVID period, which is almost certainly a reporting artifact — that division likely filed formal reports only for crashes serious enough to result in injury, undercounting minor crashes. The weight collapsed post-COVID as the reported injury rate normalized to near the citywide average.
+                <sup style={{ fontSize: '0.8em', verticalAlign: 'super', marginRight: '2px' }}>4</sup>
+                The Rampart, Newton, Northeast, Central, and Hollenbeck divisions recorded injury rates of 99–100% in the pre-COVID period, which is almost certainly a reporting artifact — those divisions likely filed formal reports only for crashes serious enough to result in injury, undercounting minor crashes. Weights for all five collapsed post-COVID as reported injury rates normalized to near the citywide average (43–53%).
               </span>
             </div>
           </div>

@@ -76,20 +76,19 @@ const steps = [
 const findings = [
   {
     number: '01',
-    title: 'Post-2020 accuracy fell 9 points — and training on older data makes it worse.',
-    summary: 'When a model was trained on any combination of data that included pre-2020 records and then tested on 2021 or later collisions, accuracy dropped by approximately 9 percentage points compared to representative pre-COVID windows. The drop suggests a fundamental shift — in driving behavior, reporting practices, or the composition of recorded crashes — rather than gradual year-over-year drift.',
+    title: 'Pre-COVID training data is no longer useful for predicting post-COVID collisions.',
+    summary: 'When a model trained on pre-2020 data is tested on post-2020 collisions, accuracy drops by approximately 9 percentage points compared to models trained on recent data. The drop is consistent with a structural break driven largely by changes in LAPD reporting practices rather than gradual drift in driving behavior or crash composition.',
     stats: [
       { value: '85.7%',  label: '2016–2018 trained, tested 2019' },
       { value: '76.4%',  label: '2021–2023 trained, tested 2024' },
       { value: '−9.3pp', label: 'Accuracy decline' },
       { value: '91',     label: 'Total windows evaluated' },
     ],
-    body: 'When testing on 2024 collisions, a model trained on just 2022–2023 data (2 years) achieves 77.0% accuracy. A model trained on 2010–2023 data (14 years) achieves only 68.2%. The additional 12 years of pre-COVID data actively reduces predictive performance. This is consistent with a structural break in the underlying data-generating process rather than gradual behavioral drift.',
-    contrast: 'In pre-COVID years, longer windows performed comparably to shorter ones — 10-year models were about as good as 3-year models on pre-2020 test years. The recency advantage is specifically a post-2020 phenomenon. This suggests that whatever changed in 2020 was not a continuation of prior trends but a genuine discontinuity in how collisions happen and who gets injured.',
+    body: 'When testing on 2024 collisions, a model trained on just 2022–2023 data (2 years) achieves 77.0% accuracy. A model trained on 2010–2023 data (14 years) achieves only 68.2%. The additional 12 years of pre-COVID data actively reduces predictive performance. This is consistent with a structural break in the underlying data-generating process rather than gradual behavioral drift. Five LAPD divisions recorded near-100% injury rates pre-COVID, a spurious pattern the model weighted heavily that disappeared when those rates normalized post-COVID.',
   },
   {
     number: '02',
-    title: 'The hit-and-run injury weight dropped 89% between representative windows — from strongest signal to near noise.',
+    title: 'Hit-and-run fell from the strongest injury signal to near zero, and it is difficult to decipher why.',
     summary: 'Hit-and-run involvement shifted from the single largest negative injury predictor to a near-zero weight between representative pre- and post-COVID windows. The signal measured −1.45 in the 2016–2018 window and −0.15 in the 2021–2023 window — a collapse that has not reversed.',
     stats: [
       { value: '−1.45', label: 'Pre-COVID weight (2016–2018 → 2019)' },
@@ -98,19 +97,19 @@ const findings = [
       { value: '2020',  label: 'Year decline began' },
     ],
     body: 'From 2010 to 2019, is_hit_and_run was consistently the single largest negative predictor — regularly around −1.4 to −1.5. After 2020, the weight began a rapid descent. By 2021–2022 windows it had fallen to around −0.21. By 2024 windows it sits at −0.05, barely above noise. The behavioral assumption that made this signal reliable — that drivers who flee are involved in minor collisions — appears to have broken down.',
-    contrast: 'The collapse coincides with the post-COVID crash volume drop of ~63%. If the crash pool shifted to include proportionally more serious incidents, hit-and-run may no longer serve as a reliable proxy for collision severity. An alternative interpretation is that post-COVID hit-and-run crashes are genuinely more dangerous — both explanations are consistent with the data, and the two cannot be distinguished with the available information.',
+    contrast: 'The collapse coincides with the post-COVID crash volume drop of ~63%. If only more serious crashes were being reported post-COVID, hit-and-run may no longer serve as a reliable proxy for collision severity. An alternative interpretation is that post-COVID hit-and-run crashes are genuinely more dangerous — both explanations are consistent with the data, and the two cannot be distinguished with the available information.',
   },
   {
     number: '03',
-    title: 'Bucketing collisions into smaller geographic cells revealed no meaningful difference in post-COVID injury rates.',
-    summary: 'The model engineered 83 geographic grid cells — each roughly 3.5 miles wide — to test whether finer neighborhood-level bucketing would reveal local injury risk patterns beyond what division-level features capture. Post-COVID injury rates across cells converged to the citywide average and no cell produced a dramatically higher or lower risk signal. Pre-COVID cells from several divisions did surface a systematic LAPD reporting artifact.',
+    title: 'No area of Los Angeles stands out as consistently more or less dangerous for car crash injuries.',
+    summary: '83 geographic grid cells were engineered — each roughly 3.5 miles wide — to test whether finer neighborhood-level bucketing would reveal local injury risk patterns beyond what division-level features capture. Post-COVID injury rates across cells converged to the citywide average and no cell produced a dramatically higher or lower risk signal. Pre-COVID cells from several divisions did surface a systematic LAPD reporting artifact.',
     stats: [
       { value: '83',      label: 'Grid cells in the model' },
       { value: '~3.5 mi', label: 'Approximate cell width' },
       { value: '50–99%',  label: 'Pre-COVID injury rate range' },
       { value: '40–55%',  label: 'Post-COVID rate range' },
     ],
-    body: 'Grid cells covering the Rampart, Newton, Central, and Northeast division areas logged near-perfect injury rates across all pre-2020 collisions — every single crash in the dataset from those locations was coded as an injury. The citywide average was approximately 57%. This matches the same artifact visible in the corresponding division-level features (e.g., area_Rampart showed a 99.8% injury rate pre-COVID). The interpretation: those divisions systematically filed formal reports only for injury crashes prior to 2020, omitting minor incidents from the record entirely.',
+    body: 'Grid cells covering the Rampart, Newton, Northeast, Central, and Hollenbeck division areas logged near-perfect injury rates across all pre-2020 collisions — every crash in those areas was coded as an injury, against a citywide average of approximately 57%. The interpretation: those five divisions systematically filed formal reports only for injury crashes prior to 2020, omitting minor incidents from the record entirely.',
     contrast: 'Post-COVID, those same cells normalized to 40–55%, indistinguishable from the rest of the city. Because of this artifact, geographic weight overlays were not added to the map — pre-COVID grid weights were learned from biased data and would be misleading to display as a risk surface. The practical conclusion: controlling for crash type, time of day, and other factors, location in Los Angeles appears to be a relatively weak predictor of whether a given collision results in injury.',
   },
   {
@@ -137,7 +136,7 @@ const findings = [
       { value: '3–5%',   label: 'Consistent share of collisions' },
     ],
     body: "The LAPD MO code for unlicensed drivers (3602) was not used consistently before 2013, which explains the near-zero early weights. From 2014 onward, as coding became more consistent, the model could finally learn from this signal. The growing weight likely reflects a combination of genuinely more dangerous unlicensed-driver crashes in the post-COVID crash pool, and better data coverage allowing the model to distinguish unlicensed involvement as a conditional injury predictor — independent of crash type or location.",
-    contrast: "The unlicensed signal now outweighs late-night crashes as an injury predictor by a factor of roughly 1.97. Both represent roughly similar conditional injury risks based on raw data, but the unlicensed signal appears stronger after the model controls for other factors. Whether this reflects true behavioral differences or post-COVID reporting patterns is an open question that cannot be resolved with the available data.",
+    contrast: "The unlicensed signal now outweighs late-night crashes as an injury predictor by a factor of roughly 1.97. One possible explanation is that total crash volume fell ~63% post-COVID while unlicensed driver crashes held steady at 3–5% of the pool — meaning the absolute number of logged unlicensed crashes dropped sharply, and the ones that remained may skew more serious simply because minor incidents were no longer being filed. Whether the growing weight reflects a genuine behavioral shift or a change in which unlicensed crashes make it into the record cannot be determined from this data alone.",
   },
 ];
 
@@ -178,7 +177,7 @@ const disclosures = [
     id: 'disclosure-4',
     number: 4,
     title: 'LAPD pre-COVID reporting artifact',
-    body: 'Analysis of geographic grid cells and division-level features revealed that Rampart, Newton, Central, and Northeast divisions logged injury rates of 99–100% in pre-2020 records — far above the citywide ~57% average. For example, the grid cell covering the Rampart district center logged a 99.8% pre-COVID injury rate. This is interpreted as evidence that those divisions only filed formal collision reports for injury crashes prior to 2020, omitting minor incidents entirely. Geographic weights from pre-2020 training windows that include these divisions should be interpreted in light of this documentation gap. Post-COVID, injury rates in those same areas normalized to 40–55%.',
+    body: 'Analysis of geographic grid cells and division-level features revealed that Rampart, Newton, Northeast, Central, and Hollenbeck divisions logged injury rates of 99–100% in pre-2020 records — far above the citywide ~57% average. This is interpreted as evidence that those divisions only filed formal collision reports for injury crashes prior to 2020, omitting minor incidents entirely. Geographic weights from pre-2020 training windows that include these divisions should be interpreted in light of this documentation gap. Post-COVID, injury rates in those same areas normalized to 43–53%.',
   },
   {
     id: 'disclosure-5',
@@ -210,6 +209,12 @@ const disclosures = [
     title: '2012 data anomaly',
     body: 'The 2012 test year shows unusually low accuracy (~62%), likely due to limited training data (only 2011 records available) and potential coding inconsistencies in early LAPD records. Findings from that specific window are not highlighted.',
   },
+  {
+    id: 'disclosure-10',
+    number: 10,
+    title: 'Geographic risk overlays intentionally omitted from the map',
+    body: 'The interactive map does not display a neighborhood-level injury risk layer. Pre-COVID geographic weights — both division-level and grid cell — were learned from data containing the LAPD reporting artifact described above, making them unreliable as a risk surface. Post-COVID weights show no meaningful geographic differentiation once other crash features are controlled for. Displaying either set of weights as a spatial risk overlay would be misleading.',
+  },
 ];
 
 // ── Sub-components ────────────────────────────────────────────────────────────
@@ -237,15 +242,17 @@ const FindingCard = ({ f }) => (
       ))}
     </div>
 
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: f.contrast ? '1fr 1fr' : '1fr', gap: '1.5rem' }}>
       <div>
         <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.58rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '0.75rem' }}>What the data shows</div>
         <p style={{ maxWidth: 'none', fontSize: '0.95rem', lineHeight: 1.8 }}>{f.body}</p>
       </div>
+      {f.contrast && (
       <div>
         <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.58rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '0.75rem' }}>Notable contrast</div>
         <p style={{ maxWidth: 'none', fontSize: '0.95rem', lineHeight: 1.8 }}>{f.contrast}</p>
       </div>
+      )}
     </div>
   </div>
 );

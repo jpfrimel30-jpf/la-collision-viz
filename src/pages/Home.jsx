@@ -145,7 +145,7 @@ const Home = ({ setCurrentPage }) => {
               { n: '621,677', label: 'Collision records', sub: '2010 – 2024' },
               { n: '15',      label: 'Years of data',     sub: 'Jan 2010 – Dec 2024' },
               { n: '417,675', label: 'Labeled collisions', sub: 'Injury or no injury confirmed' },
-              { n: '155',     label: 'Features engineered', sub: 'Per collision record' },
+              { n: '155',     label: 'Features engineered', sub: 'Derived from 18 raw data columns' },
             ].map((s, i) => (
               <div
                 key={s.label}
@@ -173,8 +173,8 @@ const Home = ({ setCurrentPage }) => {
           <p style={{ marginBottom: '3rem', maxWidth: '62ch' }}>
             A weight is the model's estimate of how much influence a given feature has on the outcome. 
             A large weight means that feature matters a lot, and a weight near zero means it contributes little.
-            The model starts with zero knowledge: every weight is set to 0. Through 1,000 passes over the
-            training data it makes a prediction, measures how wrong it is, and takes a small step in
+            The model starts with zero knowledge: every weight is set to 0. Over 1,000 passes through the
+            training data, it makes a prediction, measures how wrong it is, and takes a small step in
             the direction that reduces error. This process is called gradient descent.
           </p>
 

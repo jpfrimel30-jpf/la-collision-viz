@@ -173,10 +173,16 @@ const SlidingWindow = () => {
       <section className="section" style={{ paddingTop: '5rem', paddingBottom: '3rem', borderBottom: '1px solid var(--border)' }}>
         <div className="container">
           <h1 style={{ marginBottom: '1.25rem', fontSize: 'clamp(1.8rem, 4vw, 3rem)' }}>Prediction Model Explorer</h1>
-          <p style={{ marginBottom: '0.75rem', maxWidth: '62ch' }}>
+          <p style={{ marginBottom: '2rem', maxWidth: '62ch' }}>
             Choose a range of years to train the model on, then pick a test year to see
             how accurately it predicted injury outcomes on crashes it had never seen before.
             The feature weights below show what the model learned to rely on most.
+          </p>
+          <p style={{ marginBottom: '0.6rem', maxWidth: '62ch' }}>
+            What do you notice about the model's accuracy when data after 2020 is used?
+          </p>
+          <p style={{ marginBottom: '0.75rem', maxWidth: '62ch', fontSize: '0.95rem' }}>
+            <strong>Accuracy:</strong> the share of test-year collisions the model correctly classified as injury or no injury — out of crashes it had never seen during training.
           </p>
         </div>
       </section>
@@ -254,7 +260,7 @@ const SlidingWindow = () => {
                     </p>
                   </div>
                 </div>
-                <FeatureBars features={result.features.filter(f => !ENGINEERED_ZONES.has(f[0]))} />
+                <FeatureBars features={result.features.filter(f => !ENGINEERED_ZONES.has(f[0]) && !f[0].startsWith('grid_'))} />
               </>
             )}
           </div>

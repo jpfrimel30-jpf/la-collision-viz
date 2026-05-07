@@ -7,7 +7,7 @@
   --bg-card:      #F2F2EE;
   --text:         #1A1A1A;
   --text-sec:     #555555;
-  --text-muted:   #999999;
+  --text-muted:   #737373;
   --border:       #DDDDD8;
   --border-light: #EFEFEB;
 
@@ -31,7 +31,7 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: var(--font-serif);
-  font-size: 18px;
+  font-size: 19px;
   font-weight: 400;
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;

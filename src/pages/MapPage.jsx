@@ -138,12 +138,12 @@ const MapPage = () => {
           .setLngLat(coords)
           .setHTML(`
             <div style="font-family: 'Outfit', sans-serif; padding: 0.25rem;">
-              <div style="font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: ${(props.injury === true || props.injury === 'true') ? '#FF6B6B' : (props.injury === false || props.injury === 'false') ? '#2DD4BF' : '#94A3B8'}; margin-bottom: 0.4rem;">
+              <div style="font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: ${(props.injury === true || props.injury === 'true') ? '#C0392B' : (props.injury === false || props.injury === 'false') ? '#0D7A6B' : '#555555'}; margin-bottom: 0.4rem; font-weight: 600;">
                 ${(props.injury === true || props.injury === 'true') ? '⚠ Injury' : (props.injury === false || props.injury === 'false') ? '✓ No Injury' : '? Unknown'}
               </div>
-              <div style="font-weight: 600; color: #F0F4FF; margin-bottom: 0.25rem;">${props.type || 'Collision'}</div>
-              <div style="font-size: 0.8rem; color: #A8B8D8;">${props.area || ''}</div>
-              <div style="font-size: 0.8rem; color: #A8B8D8;">${props.date || ''}</div>
+              <div style="font-weight: 600; color: #1A1A1A; margin-bottom: 0.25rem;">${props.type || 'Collision'}</div>
+              <div style="font-size: 0.8rem; color: #555555;">${props.area || ''}</div>
+              <div style="font-size: 0.8rem; color: #555555;">${props.date || ''}</div>
             </div>
           `)
           .addTo(map.current);
