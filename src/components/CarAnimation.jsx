@@ -45,7 +45,7 @@ const CarAnimation = () => {
     let crashTarget = null;
     let otherTimer = 0;
     let otherInterval = 90 + Math.random() * 60;
-    let hazardTimer = Math.floor((7 + Math.random() * 4) * 60);
+    let hazardTimer = Math.floor((4 + Math.random() * 3) * 60);
     let laneTimer   = 180 + Math.floor(Math.random() * 200);
 
     // ── Helpers ──────────────────────────────────────────────────────────────
@@ -215,7 +215,7 @@ const CarAnimation = () => {
         hazardTimer--;
         if (hazardTimer <= 0) {
           spawnHazard();
-          hazardTimer = Math.floor((7 + Math.random() * 5) * 60);
+          hazardTimer = Math.floor((4 + Math.random() * 3) * 60);
         }
         if (scrolling) roadY = (roadY + player.speed * 2) % H;
         others.forEach(o => { o.y -= (player.speed - o.speed); });
@@ -277,7 +277,7 @@ const CarAnimation = () => {
         if (player.blinkCount >= 6) {
           player.state = 'drive'; player.vis = true;
           stEl.textContent = 'cruising';
-          hazardTimer = Math.floor((7 + Math.random() * 4) * 60);
+          hazardTimer = Math.floor((4 + Math.random() * 3) * 60);
           laneTimer   = 120 + Math.floor(Math.random() * 160);
         }
       }

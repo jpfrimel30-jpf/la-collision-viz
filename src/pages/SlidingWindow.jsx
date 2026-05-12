@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 
 const PRECOMPUTED = {
   "2010-2011-2012":{accuracy:0.8333,features:[["is_parked_vehicle",-1.175],["is_hit_and_run",-0.9773],["area_Southeast",-0.9134],["is_pedestrian",0.8072],["grid_34.3_-118.6",-0.793],["grid_34.0_-118.35",-0.785],["is_fixed_object",-0.6808],["grid_34.25_-118.6",0.6114],["is_van_nuys_blvd",0.5861],["is_bike",0.5389],["grid_34.15_-118.45",-0.5386],["vict_age",0.499],["hour_of_day",-0.4611],["grid_34.05_-118.55",0.4333],["is_western_ave",0.4279],["grid_34.15_-118.2",-0.42],["is_rush_hour",0.4192],["grid_34.0_-118.3",-0.416],["grid_34.25_-118.35",-0.4054],["sex_M",-0.4017]]},
@@ -121,11 +121,29 @@ const ENGINEERED_ZONES = new Set([
   'is_san_fernando_valley', 'is_coastal', 'is_freeway_adjacent',
 ]);
 
+const HIDDEN_FEATURES = new Set([
+  'hour_of_day',  // raw 0-23 hour; less interpretable than engineered time flags
+  'vict_age',     // continuous raw field; ambiguous as a standalone predictor
+  'descent_X',    // X = unknown/unrecorded descent — not a meaningful category
+]);
+
 const FeatureBars = ({ features }) => {
   const maxWeight = Math.max(...features.map(f => Math.abs(f[1])));
   return (
     <div className="feature-bars">
-      <div className="result-label" style={{ marginBottom: '0.75rem' }}>Top Predictors by Model Weight</div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+        <div className="result-label">Top Predictors by Model Weight</div>
+        <div style={{ display: 'flex', gap: '0.9rem', fontFamily: 'var(--font-mono)', fontSize: '0.6rem', color: 'var(--text-muted)' }}>
+          <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+            <span style={{ width: '10px', height: '10px', background: '#16A34A', borderRadius: '2px', flexShrink: 0 }} />
+            lower injury probability
+          </span>
+          <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+            <span style={{ width: '10px', height: '10px', background: '#E02222', borderRadius: '2px', flexShrink: 0 }} />
+            higher injury probability
+          </span>
+        </div>
+      </div>
       {features.map((f, i) => (
         <div className="feature-bar-item" key={i}>
           <div className="feature-name">{f[0].replace(/_/g, ' ')}</div>
@@ -144,13 +162,30 @@ const FeatureBars = ({ features }) => {
   );
 };
 
-const SlidingWindow = () => {
+const SlidingWindow = ({ setCurrentPage }) => {
   const [trainStart, setTrainStart] = useState(2022);
   const [trainEnd,   setTrainEnd]   = useState(2023);
   const [testYear,   setTestYear]   = useState(2024);
   const [result,     setResult]     = useState(null);
   const [loading,    setLoading]    = useState(false);
   const [error,      setError]      = useState('');
+  const [showHint,       setShowHint]       = useState(false);
+  const [highlightInputs, setHighlightInputs] = useState(false);
+  const hintRef      = useRef(null);
+  const highlightRef = useRef(null);
+
+  const applyPreset = (start, end, test) => {
+    setTrainStart(start);
+    setTrainEnd(end);
+    setTestYear(test);
+    setResult(null);
+    setShowHint(true);
+    if (hintRef.current) clearTimeout(hintRef.current);
+    hintRef.current = setTimeout(() => setShowHint(false), 2750);
+    setHighlightInputs(true);
+    if (highlightRef.current) clearTimeout(highlightRef.current);
+    highlightRef.current = setTimeout(() => setHighlightInputs(false), 800);
+  };
 
   const handleRun = () => {
     setError('');
@@ -178,9 +213,35 @@ const SlidingWindow = () => {
             how accurately it predicted injury outcomes on crashes it had never seen before.
             The feature weights below show what the model learned to rely on most.
           </p>
-          <p style={{ marginBottom: '0.6rem', maxWidth: '62ch' }}>
+          <p style={{ marginBottom: '1rem', maxWidth: '62ch' }}>
             What do you notice about the model's accuracy when data after 2020 is used?
           </p>
+
+          <div style={{ display: 'flex', gap: '1.25rem', flexWrap: 'wrap', marginBottom: '1rem' }}>
+            <div>
+              <button
+                onClick={() => applyPreset(2016, 2018, 2019)}
+                style={{ background: '#fff', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: '0.5rem 1.1rem', fontSize: '0.85rem', fontFamily: 'var(--font-sans)', color: 'var(--text)', cursor: 'pointer' }}
+              >
+                Test: Data before 2020
+              </button>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.3rem', fontStyle: 'italic' }}>
+                (2016–2018, test on 2019)
+              </div>
+            </div>
+            <div>
+              <button
+                onClick={() => applyPreset(2021, 2023, 2024)}
+                style={{ background: '#fff', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: '0.5rem 1.1rem', fontSize: '0.85rem', fontFamily: 'var(--font-sans)', color: 'var(--text)', cursor: 'pointer' }}
+              >
+                Test: Data after 2020
+              </button>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.3rem', fontStyle: 'italic' }}>
+                (2021–2023, test on 2024)
+              </div>
+            </div>
+          </div>
+
           <p style={{ marginBottom: '0.75rem', maxWidth: '62ch', fontSize: '0.95rem' }}>
             <strong>Accuracy:</strong> the share of test-year collisions the model correctly classified as injury or no injury — out of crashes it had never seen during training.
           </p>
@@ -190,39 +251,69 @@ const SlidingWindow = () => {
       <section className="section" style={{ paddingTop: '3rem' }}>
         <div className="container">
           <div className="window-explorer">
+            <div style={{ position: 'relative' }}>
+              {showHint && (
+                <div style={{
+                  position: 'absolute',
+                  bottom: 'calc(100% + 0.5rem)',
+                  right: 0,
+                  textAlign: 'right',
+                  whiteSpace: 'nowrap',
+                  pointerEvents: 'none',
+                  zIndex: 10,
+                }}>
+                  <span style={{
+                    fontFamily: 'var(--font-serif)',
+                    fontSize: '1.1rem',
+                    fontWeight: 700,
+                    fontStyle: 'italic',
+                    color: 'var(--text)',
+                  }}>
+                    Click here to run the model!
+                  </span>
+                  <div style={{ fontSize: '1.6rem', lineHeight: 1, color: 'var(--text)', marginTop: '0.1rem' }}>↓</div>
+                </div>
+              )}
             <div className="window-controls">
               <div className="input-group">
-                <label>Train From</label>
-                <select value={trainStart} onChange={e => {
-                  const ns = +e.target.value;
-                  setTrainStart(ns);
-                  if (ns >= trainEnd) {
-                    setTrainEnd(ns + 1);
-                    if (testYear <= ns + 1) setTestYear(ns + 2);
-                  }
-                }}>
-                  {YEARS.slice(0, -2).map(y => <option key={y} value={y}>{y}</option>)}
-                </select>
+                <label>Train From <span style={{ textTransform: 'none', letterSpacing: 'normal', fontStyle: 'italic' }}>(select year)</span></label>
+                <div style={{ position: 'relative' }}>
+                  <select value={trainStart} style={{ width: '100%', paddingRight: '2rem', background: highlightInputs ? '#dbeafe' : 'var(--bg)', borderColor: highlightInputs ? '#93c5fd' : 'var(--border)', transition: 'background 0.5s ease, border-color 0.5s ease' }} onChange={e => {
+                    const ns = +e.target.value;
+                    setTrainStart(ns);
+                    if (ns >= trainEnd) {
+                      setTrainEnd(ns + 1);
+                      if (testYear <= ns + 1) setTestYear(ns + 2);
+                    }
+                  }}>
+                    {YEARS.slice(0, -2).map(y => <option key={y} value={y}>{y}</option>)}
+                  </select>
+                  <span style={{ position: 'absolute', right: '0.65rem', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: 'var(--text-muted)', fontSize: '0.7rem' }}>▾</span>
+                </div>
               </div>
               <div className="input-group">
-                <label>Train To</label>
-                <select value={trainEnd} onChange={e => {
-                  const ne = +e.target.value;
-                  setTrainEnd(ne);
-                  setTestYear(ne + 1);
-                }}>
-                  {YEARS.slice(1, -1).map(y => <option key={y} value={y}>{y}</option>)}
-                </select>
+                <label>Train To <span style={{ textTransform: 'none', letterSpacing: 'normal', fontStyle: 'italic' }}>(select year)</span></label>
+                <div style={{ position: 'relative' }}>
+                  <select value={trainEnd} style={{ width: '100%', paddingRight: '2rem', background: highlightInputs ? '#dbeafe' : 'var(--bg)', borderColor: highlightInputs ? '#93c5fd' : 'var(--border)', transition: 'background 0.5s ease, border-color 0.5s ease' }} onChange={e => {
+                    const ne = +e.target.value;
+                    setTrainEnd(ne);
+                    setTestYear(ne + 1);
+                  }}>
+                    {YEARS.slice(1, -1).map(y => <option key={y} value={y}>{y}</option>)}
+                  </select>
+                  <span style={{ position: 'absolute', right: '0.65rem', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: 'var(--text-muted)', fontSize: '0.7rem' }}>▾</span>
+                </div>
               </div>
               <div className="input-group">
-                <label>Test Year</label>
-                <select value={testYear} onChange={e => setTestYear(+e.target.value)}>
-                  {YEARS.slice(2).map(y => <option key={y} value={y}>{y}</option>)}
-                </select>
+                <label>Test Year <span style={{ textTransform: 'none', letterSpacing: 'normal', fontStyle: 'italic' }}>(automatically adjusts)</span></label>
+                <div style={{ background: '#f5f5f3', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: '0.55rem 0.85rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', userSelect: 'none' }}>
+                  {testYear}
+                </div>
               </div>
-              <button className="btn" onClick={handleRun} disabled={loading}>
+              <button className="btn" style={{ alignSelf: 'end' }} onClick={handleRun} disabled={loading}>
                 {loading ? 'Loading…' : 'Run Model'}
               </button>
+            </div>
             </div>
 
             {error && (
@@ -243,7 +334,7 @@ const SlidingWindow = () => {
                 <div className="results-grid">
                   <div className="result-card">
                     <div className="result-label">Test Accuracy</div>
-                    <div className={`result-value ${getAccuracyColor(result.accuracy)}`}>
+                    <div className="result-value">
                       {(result.accuracy * 100).toFixed(1)}%
                     </div>
                     <p style={{ fontSize: '0.85rem', marginTop: '0.65rem', maxWidth: 'none', color: 'var(--text-muted)' }}>
@@ -260,7 +351,7 @@ const SlidingWindow = () => {
                     </p>
                   </div>
                 </div>
-                <FeatureBars features={result.features.filter(f => !ENGINEERED_ZONES.has(f[0]) && !f[0].startsWith('grid_'))} />
+                <FeatureBars features={result.features.filter(f => !ENGINEERED_ZONES.has(f[0]) && !f[0].startsWith('grid_') && !HIDDEN_FEATURES.has(f[0])).slice(0, 15)} />
               </>
             )}
           </div>
@@ -287,6 +378,24 @@ const SlidingWindow = () => {
                 same weight from a different window, since each window's scaling is fit independently.
               </p>
             </div>
+          </div>
+          <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
+            <button
+              onClick={() => setCurrentPage('formula-explorer')}
+              style={{
+                background: '#1a1a1a',
+                color: '#fff',
+                border: 'none',
+                borderRadius: 'var(--radius)',
+                padding: '0.85rem 2rem',
+                fontSize: '0.95rem',
+                fontFamily: 'var(--font-sans)',
+                cursor: 'pointer',
+                letterSpacing: '0.02em',
+              }}
+            >
+              Click to compare scenarios
+            </button>
           </div>
         </div>
       </section>

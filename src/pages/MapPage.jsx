@@ -11,12 +11,9 @@ const FILTER_TYPES = [
   { id: 'noinjury', label: 'No Injury' },
 ];
 
-const MapPage = () => {
+const MapPage = ({ startYear, setStartYear, endYear, setEndYear, filter, setFilter }) => {
   const mapContainer = useRef(null);
   const map          = useRef(null);
-  const [startYear, setStartYear] = useState(2022);
-  const [endYear,   setEndYear]   = useState(2023);
-  const [filter,    setFilter]    = useState('all');
   const [loading,   setLoading]   = useState(false);
   const [stats,     setStats]     = useState({ total: 0, injury: 0, noinjury: 0 });
   const [mapLoaded, setMapLoaded] = useState(false);

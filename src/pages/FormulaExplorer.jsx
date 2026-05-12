@@ -231,7 +231,7 @@ const fmt = (n, d = 1) => (n * 100).toFixed(d) + '%';
 const fmtW = w => (w >= 0 ? '+' : '') + w.toFixed(4);
 const mono = { fontFamily: 'var(--font-mono)' };
 
-export default function FormulaExplorer() {
+export default function FormulaExplorer({ setCurrentPage }) {
   const [period, setPeriod]             = useState('post');
   const [active, setActive]             = useState(new Set());
   const [activePreset, setActivePreset] = useState(null);
@@ -691,6 +691,24 @@ export default function FormulaExplorer() {
                 <sup style={{ fontSize: '0.8em', verticalAlign: 'super', marginRight: '2px' }}>4</sup>
                 The Rampart, Newton, Northeast, Central, and Hollenbeck divisions recorded injury rates of 99–100% in the pre-COVID period, which is almost certainly a reporting artifact — those divisions likely filed formal reports only for crashes serious enough to result in injury, undercounting minor crashes. Weights for all five collapsed post-COVID as reported injury rates normalized to near the citywide average (43–53%).
               </span>
+            </div>
+            <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
+              <button
+                onClick={() => setCurrentPage('process')}
+                style={{
+                  background: '#1a1a1a',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: 'var(--radius)',
+                  padding: '0.85rem 2rem',
+                  fontSize: '0.95rem',
+                  fontFamily: 'var(--font-sans)',
+                  cursor: 'pointer',
+                  letterSpacing: '0.02em',
+                }}
+              >
+                Click to see the process and learn about the findings
+              </button>
             </div>
           </div>
         </div>

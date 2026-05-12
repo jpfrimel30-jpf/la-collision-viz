@@ -9,14 +9,27 @@ import FormulaExplorer from './pages/FormulaExplorer';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
+  const [mapStartYear, setMapStartYear] = useState(2010);
+  const [mapEndYear,   setMapEndYear]   = useState(2024);
+  const [mapFilter,    setMapFilter]    = useState('all');
+
+  React.useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, [currentPage]);
 
   const renderPage = () => {
     switch (currentPage) {
       case 'home':             return <Home setCurrentPage={setCurrentPage} />;
-      case 'formula-explorer': return <FormulaExplorer />;
-      case 'sliding-window':   return <SlidingWindow />;
-      case 'map':              return <MapPage />;
-      case 'process':          return <HowItWorks />;
+      case 'formula-explorer': return <FormulaExplorer setCurrentPage={setCurrentPage} />;
+      case 'sliding-window':   return <SlidingWindow setCurrentPage={setCurrentPage} />;
+      case 'map':              return (
+        <MapPage
+          startYear={mapStartYear} setStartYear={setMapStartYear}
+          endYear={mapEndYear}     setEndYear={setMapEndYear}
+          filter={mapFilter}       setFilter={setMapFilter}
+        />
+      );
+      case 'process':          return <HowItWorks setCurrentPage={setCurrentPage} />;
       default:                 return <Home setCurrentPage={setCurrentPage} />;
     }
   };

@@ -259,7 +259,7 @@ const FindingCard = ({ f }) => (
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 
-const HowItWorks = () => {
+const HowItWorks = ({ setCurrentPage }) => {
   const [activeStep, setActiveStep] = useState(0);
 
   return (
@@ -423,6 +423,25 @@ const HowItWorks = () => {
                 <div style={{ padding: '0.9rem 1.25rem', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', color: m.worse ? 'var(--red)' : 'var(--green)' }}>{m.delta}</div>
               </div>
             ))}
+          </div>
+
+          <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
+            <button
+              onClick={() => setCurrentPage('map')}
+              style={{
+                background: '#1a1a1a',
+                color: '#fff',
+                border: 'none',
+                borderRadius: 'var(--radius)',
+                padding: '0.85rem 2rem',
+                fontSize: '0.95rem',
+                fontFamily: 'var(--font-sans)',
+                cursor: 'pointer',
+                letterSpacing: '0.02em',
+              }}
+            >
+              Click to visualize the data on a Los Angeles map
+            </button>
           </div>
 
         </div>

@@ -191,7 +191,7 @@ const Home = ({ setCurrentPage }) => {
           {/* ── Formula visualization ── */}
           <div style={{ marginTop: '2.5rem' }}>
             <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.58rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '1rem' }}>
-              The trained formula
+              A trained formula
             </div>
             <div style={{ background: 'var(--bg-subtle)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: '2rem 2rem 2.25rem', overflowX: 'auto' }}>
               <svg viewBox="0 0 625 115" width="100%" style={{ minWidth: '480px' }} aria-label="Trained logistic regression formula with annotated weights">
@@ -240,6 +240,24 @@ const Home = ({ setCurrentPage }) => {
               often interpreted as a probability. The model evaluates all 155 weighted features, adds the
               values together, and applies σ to compress the result to p(injury).
             </p>
+            <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
+              <button
+                onClick={() => setCurrentPage('sliding-window')}
+                style={{
+                  background: '#1a1a1a',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: 'var(--radius)',
+                  padding: '0.85rem 2rem',
+                  fontSize: '0.95rem',
+                  fontFamily: 'var(--font-sans)',
+                  cursor: 'pointer',
+                  letterSpacing: '0.02em',
+                }}
+              >
+                Click to test trained model
+              </button>
+            </div>
           </div>
         </div>
       </section>

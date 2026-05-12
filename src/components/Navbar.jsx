@@ -5,8 +5,8 @@ const Navbar = ({ currentPage, setCurrentPage }) => {
     { id: 'home',             label: 'Home' },
     { id: 'sliding-window',   label: 'Prediction Model' },
     { id: 'formula-explorer', label: 'Formula Explorer' },
-    { id: 'map',              label: 'Map' },
     { id: 'process',          label: 'Process & Findings' },
+    { id: 'map',              label: 'Map' },
   ];
 
   return (
