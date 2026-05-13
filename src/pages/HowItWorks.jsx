@@ -76,8 +76,8 @@ const steps = [
 const findings = [
   {
     number: '01',
-    title: 'Pre-COVID training data is no longer useful for predicting post-COVID collisions.',
-    summary: 'When a model trained on pre-2020 data is tested on post-2020 collisions, accuracy drops by approximately 9 percentage points compared to models trained on recent data. The drop is consistent with a structural break driven largely by changes in LAPD reporting practices rather than gradual drift in driving behavior or crash composition.',
+    title: 'Predicting car crash injuries became measurably harder after the pandemic: post-COVID models are 9 points less accurate than pre-COVID ones.',
+    summary: 'Models trained and tested on pre-pandemic data consistently achieved ~85.7% accuracy. Models trained and tested on post-pandemic data achieved only ~76.4% — a 9-point gap. The drop reflects a structural shift in the collision data between the two eras, driven largely by changes in LAPD reporting practices rather than gradual drift in driving behavior or crash composition.',
     stats: [
       { value: '85.7%',  label: '2016–2018 trained, tested 2019' },
       { value: '76.4%',  label: '2021–2023 trained, tested 2024' },
@@ -88,16 +88,16 @@ const findings = [
   },
   {
     number: '02',
-    title: 'Hit-and-run fell from the strongest injury signal to near zero, and it is difficult to decipher why.',
-    summary: 'Hit-and-run involvement shifted from the single largest negative injury predictor to a near-zero weight between representative pre- and post-COVID windows. The signal measured −1.45 in the 2016–2018 window and −0.15 in the 2021–2023 window — a collapse that has not reversed.',
+    title: 'Pre-COVID, a hit-and-run was the strongest signal that a crash would not result in injury. Post-COVID, that signal nearly vanished.',
+    summary: 'Hit-and-run involvement shifted from the single largest negative injury predictor to a near-zero weight between representative pre- and post-COVID windows. The signal measured −1.45 in the 2016–2018 window and −0.15 in the 2021–2023 window.',
     stats: [
       { value: '−1.45', label: 'Pre-COVID weight (2016–2018 → 2019)' },
       { value: '−0.15', label: 'Post-COVID weight (2021–2023 → 2024)' },
       { value: '89%',   label: 'Drop in signal magnitude' },
       { value: '2020',  label: 'Year decline began' },
     ],
-    body: 'From 2010 to 2019, is_hit_and_run was consistently the single largest negative predictor — regularly around −1.4 to −1.5. After 2020, the weight began a rapid descent. By 2021–2022 windows it had fallen to around −0.21. By 2024 windows it sits at −0.05, barely above noise. The behavioral assumption that made this signal reliable — that drivers who flee are involved in minor collisions — appears to have broken down.',
-    contrast: 'The collapse coincides with the post-COVID crash volume drop of ~63%. If only more serious crashes were being reported post-COVID, hit-and-run may no longer serve as a reliable proxy for collision severity. An alternative interpretation is that post-COVID hit-and-run crashes are genuinely more dangerous — both explanations are consistent with the data, and the two cannot be distinguished with the available information.',
+    body: 'From 2010 to 2019, is_hit_and_run was consistently the single largest negative predictor — regularly around −1.4 to −1.5. After 2020, the weight began a rapid descent. By 2021–2022 windows, it had fallen to around −0.21, and even reached −0.05 in 2024. A large negative weight meant hit-and-run involvement was one of the strongest signals that a crash would not result in injury — the model consistently learned that fleeing drivers tend to be involved in less severe collisions. As that weight collapsed toward zero, this relationship effectively disappeared from the model\'s predictions. The behavioral assumption that made this signal reliable — that drivers who flee are involved in minor collisions — appears to have broken down.',
+    contrast: 'The collapse coincides with the post-COVID crash volume drop of ~63%. If only more serious crashes were being reported post-COVID, hit-and-run may no longer serve as a reliable proxy for collision severity. An alternative interpretation is that post-COVID hit-and-run crashes are genuinely more dangerous. Both explanations are consistent with the data, and the two cannot be distinguished with the available information.',
   },
   {
     number: '03',
@@ -219,43 +219,72 @@ const disclosures = [
 
 // ── Sub-components ────────────────────────────────────────────────────────────
 
-const FindingCard = ({ f }) => (
-  <div style={{ paddingTop: '3rem', paddingBottom: '3rem', borderBottom: '1px solid var(--border)' }}>
-    <div style={{ display: 'flex', alignItems: 'baseline', gap: '1.5rem', marginBottom: '1.25rem' }}>
-      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.62rem', letterSpacing: '0.2em', color: 'var(--text-muted)' }}>
-        Finding {f.number}
-      </span>
-    </div>
-    <h2 style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.9rem)', maxWidth: '75ch', marginBottom: '1.25rem', fontWeight: 700, lineHeight: 1.3 }}>
-      {f.title}
-    </h2>
-    <p style={{ fontSize: '1rem', maxWidth: '70ch', marginBottom: '2rem', lineHeight: 1.8 }}>
-      {f.summary}
-    </p>
+const FindingCard = ({ f }) => {
+  const [expanded, setExpanded] = useState(false);
 
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1px', border: '1px solid var(--border)', borderRadius: 'var(--radius)', overflow: 'hidden', marginBottom: '2rem' }}>
-      {f.stats.map((s, i) => (
-        <div key={i} style={{ padding: '1.25rem', background: 'var(--bg-subtle)', borderRight: i < 3 ? '1px solid var(--border)' : 'none' }}>
-          <div style={{ fontFamily: 'var(--font-serif)', fontSize: '1.9rem', fontWeight: 700, color: 'var(--text)', lineHeight: 1, marginBottom: '0.4rem' }}>{s.value}</div>
-          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.58rem', letterSpacing: '0.08em', color: 'var(--text-muted)', lineHeight: 1.4 }}>{s.label}</div>
-        </div>
-      ))}
-    </div>
+  return (
+    <div style={{ paddingTop: '3rem', paddingBottom: '3rem', borderBottom: '1px solid var(--border)' }}>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: '1.5rem', marginBottom: '1.25rem' }}>
+        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.85rem', letterSpacing: '0.15em', color: 'var(--text)', fontWeight: 700 }}>
+          Finding {f.number}
+        </span>
+      </div>
+      <h2 style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.9rem)', maxWidth: '75ch', marginBottom: '1.5rem', fontWeight: 700, lineHeight: 1.3 }}>
+        {f.title}
+      </h2>
 
-    <div style={{ display: 'grid', gridTemplateColumns: f.contrast ? '1fr 1fr' : '1fr', gap: '1.5rem' }}>
-      <div>
-        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.58rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '0.75rem' }}>What the data shows</div>
-        <p style={{ maxWidth: 'none', fontSize: '0.95rem', lineHeight: 1.8 }}>{f.body}</p>
-      </div>
-      {f.contrast && (
-      <div>
-        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.58rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '0.75rem' }}>Notable contrast</div>
-        <p style={{ maxWidth: 'none', fontSize: '0.95rem', lineHeight: 1.8 }}>{f.contrast}</p>
-      </div>
+      {expanded && (
+        <>
+          <p style={{ fontSize: '1rem', maxWidth: 'none', marginBottom: '2rem', lineHeight: 1.8 }}>
+            {f.summary}
+          </p>
+
+          <div style={{ display: 'grid', gridTemplateColumns: f.contrast ? '1fr 1fr' : '1fr', gap: '1.5rem', marginBottom: '2rem' }}>
+            <div>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.58rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '0.75rem' }}>What the data shows</div>
+              <p style={{ maxWidth: 'none', fontSize: '0.95rem', lineHeight: 1.8 }}>{f.body}</p>
+            </div>
+            {f.contrast && (
+              <div>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.58rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '0.75rem' }}>Notable contrast</div>
+                <p style={{ maxWidth: 'none', fontSize: '0.95rem', lineHeight: 1.8 }}>{f.contrast}</p>
+              </div>
+            )}
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1px', border: '1px solid var(--border)', borderRadius: 'var(--radius)', overflow: 'hidden', marginBottom: '1.5rem' }}>
+            {f.stats.map((s, i) => (
+              <div key={i} style={{ padding: '1.25rem', background: 'var(--bg-subtle)', borderRight: i < 3 ? '1px solid var(--border)' : 'none' }}>
+                <div style={{ fontFamily: 'var(--font-serif)', fontSize: '1.9rem', fontWeight: 700, color: 'var(--text)', lineHeight: 1, marginBottom: '0.4rem' }}>{s.value}</div>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.58rem', letterSpacing: '0.08em', color: 'var(--text-muted)', lineHeight: 1.4 }}>{s.label}</div>
+              </div>
+            ))}
+          </div>
+        </>
       )}
+
+      <button
+        onClick={() => setExpanded(v => !v)}
+        style={{
+          background: 'none',
+          border: 'none',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.4rem',
+          fontFamily: 'var(--font-mono)',
+          fontSize: '0.72rem',
+          color: 'var(--text-sec)',
+          padding: 0,
+          letterSpacing: '0.04em',
+        }}
+      >
+        {expanded ? 'Learn less' : 'Learn more'}
+        <span style={{ display: 'inline-block', transition: 'transform 180ms ease', transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)', fontSize: '1rem', lineHeight: 1 }}>▾</span>
+      </button>
     </div>
-  </div>
-);
+  );
+};
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 
@@ -269,7 +298,7 @@ const HowItWorks = ({ setCurrentPage }) => {
       <section className="section" style={{ paddingTop: '5rem', paddingBottom: '3rem', borderBottom: '1px solid var(--border)' }}>
         <div className="container">
           <h1 style={{ marginBottom: '1.25rem', fontSize: 'clamp(2rem, 4vw, 3.5rem)' }}>Process & Findings</h1>
-          <p style={{ fontSize: '1.05rem', lineHeight: 1.8, maxWidth: '65ch' }}>
+          <p style={{ fontSize: '1.05rem', lineHeight: 1.8, maxWidth: 'none' }}>
             A step-by-step account of how 621,000 collision records were cleaned, prepared, and used
             to train a logistic regression model — and the major findings that emerged from the analysis.
           </p>
@@ -337,7 +366,7 @@ const HowItWorks = ({ setCurrentPage }) => {
       <section className="section" style={{ paddingTop: '3.5rem' }}>
         <div className="container">
           <h2 style={{ marginBottom: '1.25rem' }}>The Limits of Raw Counts</h2>
-          <p style={{ marginBottom: '2.5rem', maxWidth: '65ch' }}>
+          <p style={{ marginBottom: '2.5rem', maxWidth: 'none' }}>
             Raw collision counts can mislead — when multiple factors move together, a simple tally cannot determine which one actually matters.
           </p>
 
@@ -381,11 +410,6 @@ const HowItWorks = ({ setCurrentPage }) => {
       <section className="section" style={{ paddingTop: '5rem', paddingBottom: '3rem', borderBottom: '1px solid var(--border)' }}>
         <div className="container">
           <h2 style={{ marginBottom: '1.25rem', fontSize: 'clamp(1.6rem, 3vw, 2.5rem)' }}>2. Findings from Analysis</h2>
-          <p style={{ fontSize: '1.05rem', maxWidth: '65ch', lineHeight: 1.8 }}>
-            Five findings drawn from 621,677 LAPD collision records spanning 15 years.
-            Each finding was verified across multiple training and test windows to confirm
-            it reflects a real pattern — not a one-time artifact.
-          </p>
         </div>
       </section>
 
@@ -400,7 +424,7 @@ const HowItWorks = ({ setCurrentPage }) => {
         <div className="container">
           <div className="section-label">Model Performance</div>
           <h2 style={{ marginBottom: '1rem' }}>Confusion matrix: pre vs. post COVID</h2>
-          <p style={{ marginBottom: '2.5rem', maxWidth: '65ch' }}>
+          <p style={{ marginBottom: '2.5rem', maxWidth: 'none' }}>
             Averaged across all rolling 2-year windows. The shift reflects both fewer
             true positives caught (lower recall) and a much higher rate of false positives
             — the model became less precise in both directions.

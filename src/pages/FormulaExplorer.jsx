@@ -310,7 +310,7 @@ export default function FormulaExplorer({ setCurrentPage }) {
 
         {/* Header */}
         <div style={{ marginBottom: '2.5rem', maxWidth: '680px' }}>
-          <h2 style={{ marginBottom: '1rem' }}>Formula Explorer: Build a crash scenario and compare</h2>
+          <h2 style={{ marginBottom: '1rem' }}>Injury Prediction Explorer: Build a crash scenario and compare</h2>
           <p>
             Toggle features to build a hypothetical crash. The model computes an injury probability
             from the selected features' weights and shows how that prediction would have differed

@@ -28,9 +28,9 @@ const Home = ({ setCurrentPage }) => {
               <p style={{ fontSize: '1.05rem', lineHeight: 1.8, marginBottom: '2.5rem', maxWidth: '58ch' }}>
                 After completing a supervised machine learning introductory course from Stanford
                 and DeepLearning.AI, I wanted to try applying what I learned to a real world
-                data set. I kept running into car crash data everywhere I looked. This led me
-                to a simple question: can logistic regression accurately predict whether a car crash
-                results in an injury?
+                data set. I found that Los Angeles has kept detailed public car crash records for
+                over a decade. This discovery led me to a simple question: can logistic regression
+                accurately predict whether a car crash results in an injury?
               </p>
 
             </div>
