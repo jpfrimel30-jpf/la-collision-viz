@@ -96,11 +96,6 @@ const PRECOMPUTED = {
 
 const YEARS = Array.from({ length: 15 }, (_, i) => 2010 + i);
 
-const getAccuracyColor = (acc) => {
-  if (acc >= 0.82) return '';
-  if (acc >= 0.72) return 'warning';
-  return 'danger';
-};
 
 const getEra = (trainStart, trainEnd, testYear) => {
   if (testYear <= 2020) return 'Pre-COVID Era';
