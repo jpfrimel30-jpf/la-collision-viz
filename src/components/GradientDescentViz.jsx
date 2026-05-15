@@ -58,15 +58,15 @@ const GradientDescentViz = () => {
           <line x1="20" y1="184" x2="345" y2="184" stroke="#e0e0db" strokeWidth="1"/>
 
           {/* Axis labels */}
-          <text x="8" y="100" fontSize="8" fill="#ccc" textAnchor="middle" transform="rotate(-90 8 100)">Loss</text>
-          <text x="183" y="202" fontSize="8" fill="#ccc" textAnchor="middle">weight value →</text>
+          <text x="8" y="100" fontSize="8" fill="#888" textAnchor="middle" transform="rotate(-90 8 100)">Loss</text>
+          <text x="183" y="202" fontSize="8" fill="#888" textAnchor="middle">weight value →</text>
 
           {/* Parabola: half-bowl from top-left to minimum */}
           <path d="M 22,22 Q 157,170 296,170 L 340,163" fill="none" stroke="#ddddd8" strokeWidth="2.5" strokeLinecap="round"/>
 
           {/* Optimal weight marker */}
           <line x1="296" y1="170" x2="296" y2="186" stroke="#ccc" strokeWidth="1" strokeDasharray="3,2"/>
-          <text x="296" y="199" fontSize="7.5" fill="#bbb" textAnchor="middle">optimal weight</text>
+          <text x="296" y="199" fontSize="7.5" fill="#888" textAnchor="middle">optimal weight</text>
 
           {/* Trail of previous positions */}
           {DOT_POS.slice(0, step).map((p, i) => (
@@ -91,7 +91,7 @@ const GradientDescentViz = () => {
 
           {/* Iteration counter */}
           {!converged && (
-            <text x="338" y="22" fontSize="8" fill="#ccc" textAnchor="end" fontFamily="monospace">
+            <text x="338" y="22" fontSize="8" fill="#888" textAnchor="end" fontFamily="monospace">
               iter {snap.iter} / 1,000
             </text>
           )}
