@@ -127,16 +127,15 @@ const findings = [
   },
   {
     number: '05',
-    title: 'Unlicensed drivers: a stable crash share, but a rapidly growing injury signal.',
-    summary: "Crashes involving unlicensed drivers have consistently represented 3–5% of all LAPD-logged collisions since 2014. That rate has not changed meaningfully. What has changed is the model's weight on this feature: from essentially zero in 2012 to +0.132 in 2024 — now nearly twice as strong as the late-night injury signal.",
+    title: 'Unlicensed drivers have been consistently dangerous for a decade, even as raw injury rates fell and obscured it.',
+    summary: "On the surface, crashes involving unlicensed drivers look like they have become less dangerous over time. The raw injury rate — simply how often an unlicensed driver crash resulted in injury — dropped from 80.3% in 2017 to 57.1% in 2024. However, once the model controls for everything else happening in the crash, the independent injury penalty attached to unlicensed driver involvement barely moved, holding between +0.11 and +0.13 for nearly a decade. The raw rate fell because the crashes around unlicensed drivers changed — not because unlicensed drivers themselves became less dangerous.",
     stats: [
-      { value: '0.000',  label: 'Unlicensed weight in 2012' },
-      { value: '+0.132', label: 'Unlicensed weight in 2024' },
-      { value: '1.97×',  label: 'Ratio vs. late-night signal' },
-      { value: '3–5%',   label: 'Consistent share of collisions' },
+      { value: '80.3%',  label: 'Raw injury rate (2017)' },
+      { value: '57.1%',  label: 'Raw injury rate (2024)' },
+      { value: '+0.107', label: 'Model weight (2017, earliest reliable window)' },
+      { value: '+0.132', label: 'Model weight (2024)' },
     ],
-    body: "The LAPD MO code for unlicensed drivers (3602) was not used consistently before 2013, which explains the near-zero early weights. From 2014 onward, as coding became more consistent, the model could finally learn from this signal. The growing weight likely reflects a combination of genuinely more dangerous unlicensed-driver crashes in the post-COVID crash pool, and better data coverage allowing the model to distinguish unlicensed involvement as a conditional injury predictor — independent of crash type or location.",
-    contrast: "The unlicensed signal now outweighs late-night crashes as an injury predictor by a factor of roughly 1.97. One possible explanation is that total crash volume fell ~63% post-COVID while unlicensed driver crashes held steady at 3–5% of the pool — meaning the absolute number of logged unlicensed crashes dropped sharply, and the ones that remained may skew more serious simply because minor incidents were no longer being filed. Whether the growing weight reflects a genuine behavioral shift or a change in which unlicensed crashes make it into the record cannot be determined from this data alone.",
+    body: "Between 2017 and 2024, the raw injury rate for unlicensed driver crashes fell from 80.3% to 57.1% — a drop of more than 23 percentage points. But licensed driver crashes became less dangerous over the same period too, falling from 50.7% to 45.1%. The gap between the two groups — how much worse unlicensed crashes were compared to licensed crashes — shrank from roughly 30 percentage points to just 12. That closing gap is what drove the raw rate decline. Unlicensed crashes did not become dramatically safer on their own. The entire crash pool shifted underneath them.\n\nThe model sees through this. Once crash type, location, time of day, and every other variable are held constant, the independent injury penalty attached to unlicensed driver involvement held between +0.11 and +0.13 from 2017 through 2024 — essentially unchanged. One likely explanation is that the composition of crashes around unlicensed drivers shifted post-COVID, rather than unlicensed drivers themselves becoming meaningfully less dangerous — though this cannot be confirmed from the available data alone. It is worth noting that the MO code used to flag unlicensed drivers (3602) was not consistently applied before 2016, making weights from earlier windows unreliable.",
   },
 ];
 
