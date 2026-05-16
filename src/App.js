@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import './App.css';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
-import SlidingWindow from './pages/SlidingWindow';
-import HowItWorks from './pages/HowItWorks';
-import MapPage from './pages/MapPage';
-import FormulaExplorer from './pages/FormulaExplorer';
+import PredictionModel from './pages/PredictionModel';
+import FindingsAndProcess from './pages/FindingsAndProcess';
+import Map from './pages/Map';
+import CrashScenarioExplorer from './pages/CrashScenarioExplorer';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
@@ -20,16 +20,16 @@ function App() {
   const renderPage = () => {
     switch (currentPage) {
       case 'home':             return <Home setCurrentPage={setCurrentPage} />;
-      case 'formula-explorer': return <FormulaExplorer setCurrentPage={setCurrentPage} />;
-      case 'sliding-window':   return <SlidingWindow setCurrentPage={setCurrentPage} />;
+      case 'formula-explorer': return <CrashScenarioExplorer setCurrentPage={setCurrentPage} />;
+      case 'sliding-window':   return <PredictionModel setCurrentPage={setCurrentPage} />;
       case 'map':              return (
-        <MapPage
+        <Map
           startYear={mapStartYear} setStartYear={setMapStartYear}
           endYear={mapEndYear}     setEndYear={setMapEndYear}
           filter={mapFilter}       setFilter={setMapFilter}
         />
       );
-      case 'process':          return <HowItWorks setCurrentPage={setCurrentPage} />;
+      case 'process':          return <FindingsAndProcess setCurrentPage={setCurrentPage} />;
       default:                 return <Home setCurrentPage={setCurrentPage} />;
     }
   };

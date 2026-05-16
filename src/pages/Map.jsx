@@ -11,7 +11,7 @@ const FILTER_TYPES = [
   { id: 'noinjury', label: 'No Injury' },
 ];
 
-const MapPage = ({ startYear, setStartYear, endYear, setEndYear, filter, setFilter }) => {
+const Map = ({ startYear, setStartYear, endYear, setEndYear, filter, setFilter }) => {
   const mapContainer = useRef(null);
   const map          = useRef(null);
   const [loading,   setLoading]   = useState(false);
@@ -374,4 +374,4 @@ const MapPage = ({ startYear, setStartYear, endYear, setEndYear, filter, setFilt
   );
 };
 
-export default MapPage;
+export default Map;

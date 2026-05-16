@@ -157,7 +157,7 @@ const FeatureBars = ({ features }) => {
   );
 };
 
-const SlidingWindow = ({ setCurrentPage }) => {
+const PredictionModel = ({ setCurrentPage }) => {
   const [trainStart, setTrainStart] = useState(2022);
   const [trainEnd,   setTrainEnd]   = useState(2023);
   const [testYear,   setTestYear]   = useState(2024);
@@ -398,4 +398,4 @@ const SlidingWindow = ({ setCurrentPage }) => {
   );
 };
 
-export default SlidingWindow;
+export default PredictionModel;

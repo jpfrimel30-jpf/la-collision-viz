@@ -231,7 +231,7 @@ const fmt = (n, d = 1) => (n * 100).toFixed(d) + '%';
 const fmtW = w => (w >= 0 ? '+' : '') + w.toFixed(4);
 const mono = { fontFamily: 'var(--font-mono)' };
 
-export default function FormulaExplorer({ setCurrentPage }) {
+export default function CrashScenarioExplorer({ setCurrentPage }) {
   const [period, setPeriod]             = useState('post');
   const [active, setActive]             = useState(new Set());
   const [activePreset, setActivePreset] = useState(null);

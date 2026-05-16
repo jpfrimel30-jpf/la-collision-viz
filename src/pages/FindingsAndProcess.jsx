@@ -289,7 +289,7 @@ const disclosures = [
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 
-const HowItWorks = ({ setCurrentPage }) => {
+const FindingsAndProcess = ({ setCurrentPage }) => {
   const [activeStep, setActiveStep] = useState(0);
 
   return (
@@ -493,4 +493,4 @@ const HowItWorks = ({ setCurrentPage }) => {
   );
 };
 
-export default HowItWorks;
+export default FindingsAndProcess;
