@@ -75,7 +75,7 @@ const Navbar = ({ currentPage, setCurrentPage }) => {
       {/* Mobile dropdown */}
       {menuOpen && (
         <div className="nav-mobile-menu">
-          {links.filter(l => l.id !== 'map').map(link => (
+          {links.map(link => (
             // eslint-disable-next-line jsx-a11y/anchor-is-valid
             <a
               key={link.id}

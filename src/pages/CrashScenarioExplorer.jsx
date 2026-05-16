@@ -393,7 +393,7 @@ export default function CrashScenarioExplorer({ setCurrentPage }) {
         </div>
 
         {/* Main grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2.5rem', alignItems: 'start' }}>
+        <div className="explorer-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2.5rem', alignItems: 'start' }}>
 
           {/* Left: feature toggles */}
           <div>
@@ -468,7 +468,7 @@ export default function CrashScenarioExplorer({ setCurrentPage }) {
           </div>
 
           {/* Right: sticky computation + comparison panels */}
-          <div style={{ position: 'sticky', top: '5rem' }}>
+          <div className="explorer-right" style={{ position: 'sticky', top: '5rem' }}>
 
             {/* Formula buildup */}
             <div style={{
