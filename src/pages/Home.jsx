@@ -79,7 +79,7 @@ const Home = ({ setCurrentPage }) => {
         <div className="container">
 
           {/* Tab buttons */}
-          <div style={{ display: 'flex', gap: '0', borderBottom: '1px solid var(--border)', marginBottom: '0' }}>
+          <div className="tab-buttons" style={{ display: 'flex', gap: '0', borderBottom: '1px solid var(--border)', marginBottom: '0' }}>
             {tabs.map((tab, i) => (
               <button
                 key={i}

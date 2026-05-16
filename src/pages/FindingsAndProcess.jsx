@@ -162,7 +162,7 @@ const FindingCard = ({ f }) => {
             {f.summary}
           </p>
 
-          <div style={{ display: 'grid', gridTemplateColumns: f.contrast ? '1fr 1fr' : '1fr', gap: '1.5rem', marginBottom: '2rem' }}>
+          <div className="finding-body-grid" style={{ display: 'grid', gridTemplateColumns: f.contrast ? '1fr 1fr' : '1fr', gap: '1.5rem', marginBottom: '2rem' }}>
             <div>
               <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.58rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '0.75rem' }}>What the data shows</div>
               <p style={{ maxWidth: 'none', fontSize: '0.95rem', lineHeight: 1.8 }}>{f.body}</p>
@@ -175,7 +175,7 @@ const FindingCard = ({ f }) => {
             )}
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1px', border: '1px solid var(--border)', borderRadius: 'var(--radius)', overflow: 'hidden', marginBottom: '1.5rem' }}>
+          <div className="finding-stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1px', border: '1px solid var(--border)', borderRadius: 'var(--radius)', overflow: 'hidden', marginBottom: '1.5rem' }}>
             {f.stats.map((s, i) => (
               <div key={i} style={{ padding: '1.25rem', background: 'var(--bg-subtle)', borderRight: i < 3 ? '1px solid var(--border)' : 'none' }}>
                 <div style={{ fontFamily: 'var(--font-serif)', fontSize: '1.9rem', fontWeight: 700, color: 'var(--text)', lineHeight: 1, marginBottom: '0.4rem' }}>{s.value}</div>
@@ -327,7 +327,7 @@ const FindingsAndProcess = ({ setCurrentPage }) => {
             Raw collision counts can mislead — when multiple factors move together, a simple tally cannot determine which one actually matters. Finding 3 shows how this plays out when the raw injury rate and the model's signal point in opposite directions.
           </p>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '2.5rem' }}>
+          <div className="limits-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '2.5rem' }}>
             <div className="card" style={{ borderLeft: '3px solid var(--red)' }}>
               <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--red)', marginBottom: '1rem' }}>
                 Traditional raw-count analysis
@@ -372,7 +372,8 @@ const FindingsAndProcess = ({ setCurrentPage }) => {
             a much higher rate of false positives.
           </p>
 
-          <div style={{ border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', overflow: 'hidden', marginBottom: '2rem' }}>
+          <div className="cm-overflow" style={{ overflowX: 'auto', marginBottom: '2rem' }}>
+          <div style={{ border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', overflow: 'hidden', minWidth: '520px' }}>
             <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', background: 'var(--bg-card)', borderBottom: '1px solid var(--border)' }}>
               {['Metric', 'Pre-COVID avg', 'Post-COVID avg', 'Delta'].map((h, i) => (
                 <div key={h} style={{ padding: '0.75rem 1.25rem', fontFamily: 'var(--font-mono)', fontSize: '0.6rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text-muted)', borderRight: i < 3 ? '1px solid var(--border)' : 'none' }}>{h}</div>
@@ -389,6 +390,7 @@ const FindingsAndProcess = ({ setCurrentPage }) => {
                 <div style={{ padding: '0.9rem 1.25rem', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', color: m.worse ? 'var(--red)' : 'var(--green)' }}>{m.delta}</div>
               </div>
             ))}
+          </div>
           </div>
 
           <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
@@ -420,7 +422,7 @@ const FindingsAndProcess = ({ setCurrentPage }) => {
         <div className="container">
           <h2 style={{ marginBottom: '2.5rem', fontSize: 'clamp(1.9rem, 3.2vw, 2.6rem)' }}>2. Process</h2>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '260px 1fr', gap: '2.5rem', alignItems: 'start' }}>
+          <div className="process-grid" style={{ display: 'grid', gridTemplateColumns: '260px 1fr', gap: '2.5rem', alignItems: 'start' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
               {steps.map((step, i) => (
                 <button
@@ -475,7 +477,7 @@ const FindingsAndProcess = ({ setCurrentPage }) => {
         <div className="container">
           <h2 style={{ marginBottom: '2.5rem', fontSize: 'clamp(1.9rem, 3.2vw, 2.6rem)' }}>Disclosures and Limitations</h2>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1.25rem' }}>
+          <div className="disclosure-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1.25rem' }}>
             {disclosures.map(d => (
               <div key={d.id} id={d.id} className="card" style={{ background: 'var(--bg)' }}>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.6rem', marginBottom: '0.6rem' }}>
