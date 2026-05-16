@@ -10,6 +10,7 @@ const Navbar = () => {
     { path: '/prediction-model',        label: 'Prediction Model' },
     { path: '/crash-scenario-explorer', label: 'Crash Scenario Explorer' },
     { path: '/findings-and-process',    label: 'Findings and Process' },
+    { path: '/map',                     label: 'Map' },
   ];
 
   const closeMenu = () => setMenuOpen(false);
@@ -83,7 +84,7 @@ const Navbar = () => {
               {link.label}
             </NavLink>
           ))}
-          <NavLink to="/map" onClick={closeMenu}>Map</NavLink>
+
           <div className="nav-mobile-external">
             <a href="https://github.com/jpfrimel30-jpf" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
             <a href="https://data.lacity.org/Transportation/Traffic-Collision-Data-from-2010-to-Present/d5tf-ez2w" target="_blank" rel="noopener noreferrer">LA Data ↗</a>
