@@ -521,6 +521,7 @@ input[type="range"]::-webkit-slider-thumb {
 
 /* ─── Map legend toggle button ─── */
 .map-legend-toggle-btn {
+  display: none; /* desktop: toggle not needed — legend always visible */
   position: absolute;
   bottom: 2rem;
   left: 2rem;
@@ -538,6 +539,7 @@ input[type="range"]::-webkit-slider-thumb {
   transition: background var(--transition);
 }
 .map-legend-toggle-btn:hover { background: #fff; color: var(--text); }
+.map-legend-close-btn { display: none; } /* desktop: no close button needed */
 
 /* ─── Mobile hint in map stats ─── */
 .map-hint-mobile { display: none; }
@@ -623,6 +625,12 @@ input[type="range"]::-webkit-slider-thumb {
 
   /* Reduce first-section top padding so title sits closer to navbar */
   .page-hero { padding-top: 1.5rem !important; }
+
+  /* Legend: hidden on mobile until toggled open */
+  .map-legend { display: none; }
+  .map-legend.map-legend-open { display: block; }
+  .map-legend-close-btn { display: block !important; }
+  .map-legend-toggle-btn { display: block; }
 
   /* Hide desktop hint box, show inline hint next to Unknown stat */
   .map-hint-box { display: none !important; }
