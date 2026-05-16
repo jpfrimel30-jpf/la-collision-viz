@@ -352,7 +352,7 @@ const PredictionModel = ({ setCurrentPage }) => {
           </div>
 
           {/* Explanation */}
-          <div style={{ marginTop: '3rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
+          <div className="explanation-grid" style={{ marginTop: '3rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
             <div className="card">
               <h4 style={{ marginBottom: '0.6rem', fontFamily: 'var(--font-serif)', fontWeight: 700 }}>How to read feature weights</h4>
               <p style={{ maxWidth: 'none', fontSize: '0.9rem' }}>

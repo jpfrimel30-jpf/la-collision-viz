@@ -14,9 +14,10 @@ const FILTER_TYPES = [
 const Map = ({ startYear, setStartYear, endYear, setEndYear, filter, setFilter }) => {
   const mapContainer = useRef(null);
   const map          = useRef(null);
-  const [loading,   setLoading]   = useState(false);
-  const [stats,     setStats]     = useState({ total: 0, injury: 0, noinjury: 0 });
-  const [mapLoaded, setMapLoaded] = useState(false);
+  const [loading,     setLoading]     = useState(false);
+  const [stats,       setStats]       = useState({ total: 0, injury: 0, noinjury: 0 });
+  const [mapLoaded,   setMapLoaded]   = useState(false);
+  const [legendOpen,  setLegendOpen]  = useState(false);
 
   // Initialize map
   useEffect(() => {
@@ -300,6 +301,7 @@ const Map = ({ startYear, setStartYear, endYear, setEndYear, filter, setFilter }
             {(stats.total - stats.injury - stats.noinjury).toLocaleString()}
           </span>
           <span className="map-stat-label">Unknown</span>
+          <span className="map-hint-mobile">Zoom in &amp; click a crash for details</span>
         </div>
       </>
     )}
@@ -310,8 +312,8 @@ const Map = ({ startYear, setStartYear, endYear, setEndYear, filter, setFilter }
       <div className="map-container">
         <div ref={mapContainer} style={{ width: '100%', height: '100%' }} />
 
-        {/* Hint box */}
-        <div style={{
+        {/* Hint box — hidden on mobile */}
+        <div className="map-hint-box" style={{
           position: 'absolute',
           top: '1rem',
           left: '50%',
@@ -332,42 +334,56 @@ const Map = ({ startYear, setStartYear, endYear, setEndYear, filter, setFilter }
           Zoom in closely to find specific car crashes and click on them to see what happened
         </div>
 
-        {/* Legend */}
-        <div className="map-legend">
-          <div className="map-legend-title">Clusters (zoomed out)</div>
-          <div className="map-legend-item">
-            <div className="map-legend-dot" style={{ background: '#2DD4BF' }} />
-            Small (&lt;50 crashes)
-          </div>
-          <div className="map-legend-item">
-            <div className="map-legend-dot" style={{ background: '#E8C87A' }} />
-            Medium (50–200)
-          </div>
-          <div className="map-legend-item">
-            <div className="map-legend-dot" style={{ background: '#FF6B6B' }} />
-            Large (200+)
-          </div>
-          <div style={{ borderTop: '1px solid rgba(45,212,191,0.15)', marginTop: '0.75rem', paddingTop: '0.75rem' }}>
-            <div className="map-legend-title">Individual Pins (zoom in)</div>
-            <div className="map-legend-item">
-              <div className="map-legend-dot" style={{ background: '#FF6B6B' }} />
-              Injury collision
+        {/* Legend — collapsible */}
+        {legendOpen ? (
+          <div className="map-legend">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.6rem' }}>
+              <div className="map-legend-title" style={{ margin: 0 }}>Clusters (zoomed out)</div>
+              <button
+                onClick={() => setLegendOpen(false)}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: 'var(--text-muted)', padding: 0 }}
+              >
+                hide ×
+              </button>
             </div>
             <div className="map-legend-item">
               <div className="map-legend-dot" style={{ background: '#2DD4BF' }} />
-              No injury
+              Small (&lt;50 crashes)
             </div>
             <div className="map-legend-item">
-              <div className="map-legend-dot" style={{ background: '#94A3B8' }} />
-              Unknown
+              <div className="map-legend-dot" style={{ background: '#E8C87A' }} />
+              Medium (50–200)
+            </div>
+            <div className="map-legend-item">
+              <div className="map-legend-dot" style={{ background: '#FF6B6B' }} />
+              Large (200+)
+            </div>
+            <div style={{ borderTop: '1px solid rgba(45,212,191,0.15)', marginTop: '0.75rem', paddingTop: '0.75rem' }}>
+              <div className="map-legend-title">Individual Pins (zoom in)</div>
+              <div className="map-legend-item">
+                <div className="map-legend-dot" style={{ background: '#FF6B6B' }} />
+                Injury collision
+              </div>
+              <div className="map-legend-item">
+                <div className="map-legend-dot" style={{ background: '#2DD4BF' }} />
+                No injury
+              </div>
+              <div className="map-legend-item">
+                <div className="map-legend-dot" style={{ background: '#94A3B8' }} />
+                Unknown
+              </div>
+            </div>
+            <div style={{ borderTop: '1px solid rgba(45,212,191,0.15)', marginTop: '0.75rem', paddingTop: '0.75rem' }}>
+              <div className="map-legend-item" style={{ fontSize: '0.65rem', color: 'var(--white-muted)' }}>
+                Click any pin for details
+              </div>
             </div>
           </div>
-          <div style={{ borderTop: '1px solid rgba(45,212,191,0.15)', marginTop: '0.75rem', paddingTop: '0.75rem' }}>
-            <div className="map-legend-item" style={{ fontSize: '0.65rem', color: 'var(--white-muted)' }}>
-              Click any pin for details
-            </div>
-          </div>
-        </div>
+        ) : (
+          <button className="map-legend-toggle-btn" onClick={() => setLegendOpen(true)}>
+            Click for key
+          </button>
+        )}
       </div>
 
     </div>

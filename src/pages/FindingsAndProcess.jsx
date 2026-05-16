@@ -313,7 +313,7 @@ const FindingsAndProcess = ({ setCurrentPage }) => {
         </div>
       </section>
 
-      <section style={{ paddingBottom: '0' }}>
+      <section style={{ paddingTop: '0', paddingBottom: '0' }}>
         <div className="container">
           {findings.map(f => <FindingCard key={f.number} f={f} />)}
         </div>
