@@ -60,17 +60,154 @@ const steps = [
   {
     number: '10',
     title: 'The Formula Explorer',
-    plain: 'To make the model\'s predictions interpretable at the individual feature level, a formula explorer was built. The logistic regression output is σ(z), where z is the sum of each feature value multiplied by its learned weight, plus the era-specific bias term. The explorer allows any combination of the 155 features to be toggled on or off, applying weights and bias from either the pre-COVID era (representative window: 2016–2018) or the post-COVID era (representative window: 2021–2023). For each combination, it computes the predicted injury probability, displays the raw injury rate for each selected feature, and shows the range of raw rates across all selected features.\n\nThis tool was used to manually probe which feature combinations produce the most extreme predictions, to verify that model weights align with raw injury rates in a coherent way, and to identify potential artifacts — such as the Rampart division\'s near-perfect pre-COVID injury rate, which surfaced as an anomalously high weight that warranted further investigation.',
+    plain: 'To make the model\'s predictions interpretable at the individual feature level, a formula explorer was built. The logistic regression output is σ(z), where z is the sum of each feature value multiplied by its learned weight, plus the era-specific bias term. The explorer allows any combination of the 155 features to be toggled on or off, applying weights and bias from either the pre-COVID era (2016–2018 trained, tested on 2019) or the post-COVID era (2021–2023 trained, tested on 2024). For each combination, it computes the predicted injury probability, displays the raw injury rate for each selected feature, and shows the range of raw rates across all selected features.\n\nThis tool was used to manually probe which feature combinations produce the most extreme predictions, to verify that model weights align with raw injury rates in a coherent way, and to identify potential artifacts — such as the Rampart division\'s near-perfect pre-COVID injury rate, which surfaced as an anomalously high weight that warranted further investigation.',
     highlight: 'Pre-COVID bias: +0.5154 · Post-COVID bias: +0.1845 · 155 features explorable',
   },
   {
     number: '11',
     title: 'Reading the Results',
-    plain: 'After training, the model assigns a weight to every feature. A large positive weight means that feature is associated with a higher probability of injury. A large negative weight means it is associated with a lower probability. Tracking how these weights change across different training windows — and across pre- and post-COVID eras — reveals which risk factors have grown stronger, which have collapsed, and which have remained stable over 15 years. The model also stores a bias term per window, which captures the baseline injury probability before any feature is considered. Pre-COVID windows produced a bias of +0.5154; post-COVID windows produced +0.1845, reflecting the lower average injury rate in the smaller post-COVID crash pool.\n\nTo move from raw model output to interpretable findings, several layers of analysis were applied. Feature weights from all 91 windows were compared across eras to identify trends — not just point-in-time values. The Formula Explorer was used to probe specific feature combinations, cross-check model weights against raw injury rates, and surface anomalies. Features were grouped by category (collision type, circumstances, time, geography, demographics) and each group was examined for consistent patterns versus era-specific shifts. The five findings on this page are the result of that holistic review across all 91 windows, both eras, and all 155 features.',
+    plain: 'After training, the model assigns a weight to every feature. A large positive weight means that feature is associated with a higher probability of injury. A large negative weight means it is associated with a lower probability. Tracking how these weights change across different training windows — and across pre- and post-COVID eras — reveals which risk factors have grown stronger, which have collapsed, and which have remained stable over 15 years. The model also stores a bias term per window, which captures the baseline injury probability before any feature is considered. The pre-COVID era model (2016–2018 trained, tested on 2019) achieved 85.7% accuracy; the post-COVID era model (2021–2023 trained, tested on 2024) achieved 76.4% — a 9-point gap that reflects the structural shift in collision patterns after the pandemic.\n\nTo move from raw model output to interpretable findings, several layers of analysis were applied. Feature weights from all 91 windows were compared across eras to identify trends — not just point-in-time values. The Formula Explorer was used to probe specific feature combinations, cross-check model weights against raw injury rates, and surface anomalies. Features were grouped by category (collision type, circumstances, time, geography, demographics) and each group was examined for consistent patterns versus era-specific shifts. The five findings on this page are the result of that holistic review across all 91 windows, both eras, and all 155 features.',
     highlight: '91 windows analyzed · pre- and post-COVID eras compared across all 155 features',
   },
 ];
 
+
+// ── Findings ──────────────────────────────────────────────────────────────────
+
+const findings = [
+  {
+    number: '01',
+    title: 'Predicting car crash injuries became measurably harder after the pandemic: post-COVID models are 9 points less accurate than pre-COVID ones.',
+    summary: 'Models trained and tested on pre-pandemic data consistently achieved ~85.7% accuracy. Models trained and tested on post-pandemic data achieved only ~76.4% — a 9-point gap. The drop reflects a structural shift in the collision data between the two eras, driven largely by changes in LAPD reporting practices rather than gradual drift in driving behavior or crash composition.',
+    stats: [
+      { value: '85.7%',  label: '2016–2018 trained, tested 2019' },
+      { value: '76.4%',  label: '2021–2023 trained, tested 2024' },
+      { value: '−9.3pp', label: 'Accuracy decline' },
+      { value: '91',     label: 'Total windows evaluated' },
+    ],
+    body: 'When testing on 2024 collisions, a model trained on just 2022–2023 data (2 years) achieves 77.0% accuracy. A model trained on 2010–2023 data (14 years) achieves only 68.2%. The additional 12 years of pre-COVID data actively reduces predictive performance. This is consistent with a structural break in the underlying data-generating process rather than gradual behavioral drift. Five LAPD divisions recorded near-100% injury rates pre-COVID, a spurious pattern the model weighted heavily that disappeared when those rates normalized post-COVID.',
+  },
+  {
+    number: '02',
+    title: 'Pre-COVID, a hit-and-run was the strongest signal that a crash would not result in injury. Post-COVID, that signal nearly vanished.',
+    summary: 'Hit-and-run involvement shifted from the single largest negative injury predictor to a near-zero weight between representative pre- and post-COVID windows. The signal measured −1.45 in the 2016–2018 window and −0.15 in the 2021–2023 window.',
+    stats: [
+      { value: '−1.45', label: 'Pre-COVID weight (2016–2018 → 2019)' },
+      { value: '−0.15', label: 'Post-COVID weight (2021–2023 → 2024)' },
+      { value: '89%',   label: 'Drop in signal magnitude' },
+      { value: '2020',  label: 'Year decline began' },
+    ],
+    body: 'From 2010 to 2019, is_hit_and_run was consistently the single largest negative predictor — regularly around −1.4 to −1.5. After 2020, the weight began a rapid descent. By 2021–2022 windows, it had fallen to around −0.21, and even reached −0.05 in 2024. A large negative weight meant hit-and-run involvement was one of the strongest signals that a crash would not result in injury — the model consistently learned that fleeing drivers tend to be involved in less severe collisions. As that weight collapsed toward zero, this relationship effectively disappeared from the model\'s predictions. The behavioral assumption that made this signal reliable — that drivers who flee are involved in minor collisions — appears to have broken down.',
+    contrast: 'The collapse coincides with the post-COVID crash volume drop of ~63%. If only more serious crashes were being reported post-COVID, hit-and-run may no longer serve as a reliable proxy for collision severity. An alternative interpretation is that post-COVID hit-and-run crashes are genuinely more dangerous. Both explanations are consistent with the data, and the two cannot be distinguished with the available information.',
+  },
+  {
+    number: '03',
+    title: 'Unlicensed drivers have been consistently dangerous for a decade, even as raw injury rates fell and obscured it.',
+    summary: "On the surface, crashes involving unlicensed drivers look like they have become less dangerous over time. The raw injury rate — simply how often an unlicensed driver crash resulted in injury — dropped from 80.3% in 2017 to 57.1% in 2024. However, once the model controls for everything else happening in the crash, the independent injury penalty attached to unlicensed driver involvement barely moved, holding between +0.11 and +0.13 for nearly a decade. The raw rate fell because the crashes around unlicensed drivers changed — not because unlicensed drivers themselves became less dangerous.",
+    stats: [
+      { value: '80.3%',  label: 'Raw injury rate (2017)' },
+      { value: '57.1%',  label: 'Raw injury rate (2024)' },
+      { value: '+0.107', label: 'Model weight (2017, earliest reliable window)' },
+      { value: '+0.132', label: 'Model weight (2024)' },
+    ],
+    body: "Between 2017 and 2024, the raw injury rate for unlicensed driver crashes fell from 80.3% to 57.1% — a drop of more than 23 percentage points. But licensed driver crashes became less dangerous over the same period too, falling from 50.7% to 45.1%. The gap between the two groups — how much worse unlicensed crashes were compared to licensed crashes — shrank from roughly 30 percentage points to just 12. That closing gap is what drove the raw rate decline. Unlicensed crashes did not become dramatically safer on their own. The entire crash pool shifted underneath them.\n\nThe model sees through this. Once crash type, location, time of day, and every other variable are held constant, the independent injury penalty attached to unlicensed driver involvement held between +0.11 and +0.13 from 2017 through 2024 — essentially unchanged. One likely explanation is that the composition of crashes around unlicensed drivers shifted post-COVID, rather than unlicensed drivers themselves becoming meaningfully less dangerous — though this cannot be confirmed from the available data alone. It is worth noting that the MO code used to flag unlicensed drivers (3602) was not consistently applied before 2016, making weights from earlier windows unreliable.",
+  },
+  {
+    number: '04',
+    title: 'Rush hour driving is not a meaningful injury predictor, but late night driving carries a small, consistent signal.',
+    summary: 'Rush hour (7–9am and 4–7pm), when roads are congested, might seem like the most dangerous time for a serious crash injury. More cars on the road means more chances for a collision, and busier roads might imply more serious outcomes. The data consistently contradicts this intuition. Across every 2-year training window from 2013 through 2024, rush hour remained effectively flat, fluctuating between −0.001 and +0.024 with no directional trend. Late night collisions (10pm–4am), were a slightly stronger predictor throughout the same period, with the weight growing gradually from +0.046 in 2013 to +0.067 in 2024. Even so, both signals are small in absolute terms compared to other factors in the model. Late night driving as an injury predictor is real but modest. The 2012 test year is excluded from these comparisons since both factors registered abnormally high in that window relative to every subsequent year.',
+    stats: [
+      { value: '+0.025', label: 'Rush hour weight in 2013' },
+      { value: '+0.016', label: 'Rush hour weight in 2024' },
+      { value: '+0.046', label: 'Late night weight in 2013' },
+      { value: '+0.067', label: 'Late night weight in 2024' },
+    ],
+    body: 'Rush hour congestion may limit collision severity through lower vehicle speeds and higher driver alertness, while late night conditions like emptier roads and potential impairment could contribute to more serious outcomes. These explanations are consistent with the data but cannot be confirmed from collision records alone. Despite the intuitive case for late night as a risk factor, its model weight remains modest, consistently present across every 2-year window in the study period, but not a dominant predictor.',
+    contrast: 'By 2024, late night outpaced rush hour by a factor of roughly 4, and was the only temporal feature to show a gradual upward trajectory over the study period. At +0.067, however, it remained a fraction of unlicensed driver involvement (+0.132 in 2024), itself not a top-tier predictor. The late night signal is real and worth noting, but small relative to what the model actually weighs most heavily.',
+  },
+  {
+    number: '05',
+    title: 'No neighborhood in Los Angeles consistently stood out as higher or lower injury risk once crash circumstances were accounted for.',
+    summary: 'To test whether location affects injury risk, Los Angeles was divided into a geographic grid using each collision\'s GPS coordinates. 83 distinct zones were created by rounding latitude and longitude to the nearest 0.05 degrees, each roughly 3.5 miles wide. Each zone was ranked by its model weight across every two-year training window, and those ranks were averaged to find which areas consistently appeared at the top or bottom. Across the 60 zones with sufficient data, model weights clustered tightly. The average absolute weight was just 0.02, with most zones falling between +0.05 and −0.07. No cluster of zones stood out as dramatically riskier than another. A small group of zones in the South Bay and Pico-Union areas showed the most consistent signal, averaging around −0.07, while the rest of the city produced weights close to zero. In addition, 24 zones were excluded from this analysis because they fell within five LAPD divisions that recorded pre-COVID injury rates of 99–100%, compared to a citywide average of roughly 57%. The most likely explanation is that those divisions only filed formal reports for injury crashes before 2020, omitting minor incidents entirely. However this cannot be verified from the records alone.',
+    stats: [
+      { value: '60',     label: 'Clean grid cells after removing reporting-artifact zones' },
+      { value: '0.02',   label: 'Avg absolute weight across all clean cells' },
+      { value: '+0.01',  label: 'Avg post-COVID weight — West LA and Valley top cluster' },
+      { value: '−0.07',  label: 'Avg post-COVID weight — South Bay and Pico-Union bottom cluster' },
+    ],
+    body: 'After excluding the 24 grid cells that drew the majority of their collisions from the five outlier LAPD divisions, the remaining 60 clean cells told a very different story. The top-ranked cells shifted to the West LA and northern Valley areas, but their average weights were negligible — the top five cells averaged only +0.01 post-COVID. The average absolute weight across all 60 clean cells was 0.02, which is small enough that location adds almost no predictive power once crash type, time of day, and other factors are already in the model. The bottom of the distribution was more consistent. Cells covering the South Bay and Harbor area and the Pico-Union corridor consistently ranked lowest, with average weights around −0.07 and lower rank variability than the rest of the city.',
+    contrast: 'To put the magnitude in perspective, a crash at an intersection carried a model weight of +0.37 post-COVID, and a multi-vehicle crash carried +0.24. The average location grid cell weight of 0.02 is roughly ten to eighteen times smaller than those. The South Bay and Pico-Union cells at around -0.07 are more meaningful in comparison, but still a fraction of what crash circumstances contribute. The geographic signal also collapsed 45% post-COVID overall, meaning even the modest bottom-cluster signal weakened further after the pandemic. Location in Los Angeles is a weak predictor of whether a crash results in an injury.',
+  },
+];
+
+// ── Sub-components ────────────────────────────────────────────────────────────
+
+const FindingCard = ({ f }) => {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <div style={{ paddingTop: '3rem', paddingBottom: '3rem', borderBottom: '1px solid var(--border)' }}>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: '1.5rem', marginBottom: '1.25rem' }}>
+        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.85rem', letterSpacing: '0.15em', color: 'var(--text)', fontWeight: 700 }}>
+          Finding {f.number}
+        </span>
+      </div>
+      <h2 style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.9rem)', maxWidth: '75ch', marginBottom: '1.5rem', fontWeight: 700, lineHeight: 1.3 }}>
+        {f.title}
+      </h2>
+
+      {expanded && (
+        <>
+          <p style={{ fontSize: '1rem', maxWidth: 'none', marginBottom: '2rem', lineHeight: 1.8 }}>
+            {f.summary}
+          </p>
+
+          <div style={{ display: 'grid', gridTemplateColumns: f.contrast ? '1fr 1fr' : '1fr', gap: '1.5rem', marginBottom: '2rem' }}>
+            <div>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.58rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '0.75rem' }}>What the data shows</div>
+              <p style={{ maxWidth: 'none', fontSize: '0.95rem', lineHeight: 1.8 }}>{f.body}</p>
+            </div>
+            {f.contrast && (
+              <div>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.58rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '0.75rem' }}>Notable contrast</div>
+                <p style={{ maxWidth: 'none', fontSize: '0.95rem', lineHeight: 1.8 }}>{f.contrast}</p>
+              </div>
+            )}
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1px', border: '1px solid var(--border)', borderRadius: 'var(--radius)', overflow: 'hidden', marginBottom: '1.5rem' }}>
+            {f.stats.map((s, i) => (
+              <div key={i} style={{ padding: '1.25rem', background: 'var(--bg-subtle)', borderRight: i < 3 ? '1px solid var(--border)' : 'none' }}>
+                <div style={{ fontFamily: 'var(--font-serif)', fontSize: '1.9rem', fontWeight: 700, color: 'var(--text)', lineHeight: 1, marginBottom: '0.4rem' }}>{s.value}</div>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.58rem', letterSpacing: '0.08em', color: 'var(--text-muted)', lineHeight: 1.4 }}>{s.label}</div>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
+      <button
+        onClick={() => setExpanded(v => !v)}
+        style={{
+          background: 'none',
+          border: 'none',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.4rem',
+          fontFamily: 'var(--font-mono)',
+          fontSize: '0.72rem',
+          color: 'var(--text-sec)',
+          padding: 0,
+          letterSpacing: '0.04em',
+        }}
+      >
+        {expanded ? 'Learn less' : 'Learn more'}
+        <span style={{ display: 'inline-block', transition: 'transform 180ms ease', transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)', fontSize: '1rem', lineHeight: 1 }}>▾</span>
+      </button>
+    </div>
+  );
+};
 
 // ── Confusion matrix ──────────────────────────────────────────────────────────
 
@@ -161,18 +298,127 @@ const HowItWorks = ({ setCurrentPage }) => {
       {/* ── Header ── */}
       <section className="section" style={{ paddingTop: '5rem', paddingBottom: '3rem', borderBottom: '1px solid var(--border)' }}>
         <div className="container">
-          <h1 style={{ marginBottom: '1.25rem', fontSize: 'clamp(2rem, 4vw, 3.5rem)' }}>Process & Findings</h1>
+          <h1 style={{ marginBottom: '1.25rem', fontSize: 'clamp(2rem, 4vw, 3.5rem)' }}>Findings and Process</h1>
           <p style={{ fontSize: '1.05rem', lineHeight: 1.8, maxWidth: 'none' }}>
-            A step-by-step account of how 621,000 collision records were cleaned, prepared, and used
-            to train a logistic regression model — and the major findings that emerged from the analysis.
+            Below are the major findings that emerged from the analysis and a step-by-step account of how
+            621,000 collision records were cleaned, prepared, and used to train a logistic regression model.
           </p>
         </div>
       </section>
 
+      {/* ── Findings ── */}
+      <section id="findings" className="section" style={{ paddingTop: '5rem', paddingBottom: '3rem' }}>
+        <div className="container">
+          <h2 style={{ marginBottom: '1.25rem', fontSize: 'clamp(1.9rem, 3.2vw, 2.6rem)' }}>1. Findings from Analysis</h2>
+        </div>
+      </section>
+
+      <section style={{ paddingBottom: '0' }}>
+        <div className="container">
+          {findings.map(f => <FindingCard key={f.number} f={f} />)}
+        </div>
+      </section>
+
+      {/* ── Correlation vs Causation ── */}
+      <section className="section" style={{ paddingTop: '3.5rem' }}>
+        <div className="container">
+          <h2 style={{ marginBottom: '1.25rem', fontSize: 'clamp(1.4rem, 2.2vw, 2.0rem)' }}>The Limits of Raw Counts</h2>
+          <p style={{ marginBottom: '2.5rem', maxWidth: 'none' }}>
+            Raw collision counts can mislead — when multiple factors move together, a simple tally cannot determine which one actually matters. Finding 3 shows how this plays out when the raw injury rate and the model's signal point in opposite directions.
+          </p>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '2.5rem' }}>
+            <div className="card" style={{ borderLeft: '3px solid var(--red)' }}>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--red)', marginBottom: '1rem' }}>
+                Traditional raw-count analysis
+              </div>
+              <p style={{ maxWidth: 'none', fontSize: '0.95rem', lineHeight: 1.8 }}>
+                "Pedestrian crashes and nighttime crashes both increased from 2015 to 2019, with injuries
+                climbing in tandem — so low-visibility nighttime conditions must be the primary driver
+                of serious injuries."
+              </p>
+              <p style={{ maxWidth: 'none', fontSize: '0.85rem', marginTop: '0.75rem', fontStyle: 'italic' }}>
+                This ignores that pedestrian collisions disproportionately happen at night. The injury
+                signal may come entirely from pedestrian involvement, not the hour. Raw counts cannot
+                separate the two.
+              </p>
+            </div>
+
+            <div className="card" style={{ borderLeft: '3px solid var(--green)' }}>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--green)', marginBottom: '1rem' }}>
+                Logistic regression with 155 features
+              </div>
+              <p style={{ maxWidth: 'none', fontSize: '0.95rem', lineHeight: 1.8 }}>
+                "Even after controlling for crash location, time of day, and 154 other variables —
+                pedestrian involvement ranks as the strongest injury predictor in every one of
+                the 91 training windows, across all 15 years of data."
+              </p>
+              <p style={{ maxWidth: 'none', fontSize: '0.85rem', marginTop: '0.75rem', fontStyle: 'italic' }}>
+                All 155 features are considered simultaneously, isolating each
+                factor's independent contribution to injury probability.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Confusion Matrix ── */}
+      <section className="section" style={{ paddingTop: '0.25rem' }}>
+        <div className="container" style={{ borderTop: '1px solid var(--border)', paddingTop: '0.75rem' }}>
+          <h2 style={{ marginBottom: '1rem', fontSize: 'clamp(1.4rem, 2.2vw, 2.0rem)' }}>Confusion matrix: pre vs. post COVID</h2>
+          <p style={{ marginBottom: '2.5rem', maxWidth: 'none' }}>
+            Averaged across all rolling 2-year windows. The shift reflects how the model became
+            less precise in both directions: both fewer true positives caught (lower recall) and
+            a much higher rate of false positives.
+          </p>
+
+          <div style={{ border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', overflow: 'hidden', marginBottom: '2rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', background: 'var(--bg-card)', borderBottom: '1px solid var(--border)' }}>
+              {['Metric', 'Pre-COVID avg', 'Post-COVID avg', 'Delta'].map((h, i) => (
+                <div key={h} style={{ padding: '0.75rem 1.25rem', fontFamily: 'var(--font-mono)', fontSize: '0.6rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text-muted)', borderRight: i < 3 ? '1px solid var(--border)' : 'none' }}>{h}</div>
+              ))}
+            </div>
+            {cmMetrics.map((m, i) => (
+              <div key={m.label} style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', borderBottom: i < cmMetrics.length - 1 ? '1px solid var(--border-light)' : 'none' }}>
+                <div style={{ padding: '0.9rem 1.25rem', borderRight: '1px solid var(--border)' }}>
+                  <span style={{ fontFamily: 'var(--font-serif)', fontSize: '1rem', color: 'var(--text)' }}>{m.label}</span>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: 'var(--text-muted)', marginLeft: '0.5rem' }}>({m.note})</span>
+                </div>
+                <div style={{ padding: '0.9rem 1.25rem', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', color: 'var(--text-sec)', borderRight: '1px solid var(--border)' }}>{m.pre}</div>
+                <div style={{ padding: '0.9rem 1.25rem', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', color: 'var(--text-sec)', borderRight: '1px solid var(--border)' }}>{m.post}</div>
+                <div style={{ padding: '0.9rem 1.25rem', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', color: m.worse ? 'var(--red)' : 'var(--green)' }}>{m.delta}</div>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
+            <button
+              onClick={() => setCurrentPage('map')}
+              style={{
+                background: '#1a1a1a',
+                color: '#fff',
+                border: 'none',
+                borderRadius: 'var(--radius)',
+                padding: '0.85rem 2rem',
+                fontSize: '0.95rem',
+                fontFamily: 'var(--font-sans)',
+                cursor: 'pointer',
+                letterSpacing: '0.02em',
+              }}
+            >
+              Click to visualize the data on a Los Angeles map
+            </button>
+          </div>
+
+        </div>
+      </section>
+
+      <div className="divider" />
+
       {/* ── Pipeline Steps ── */}
       <section className="section" style={{ paddingTop: '3.5rem' }}>
         <div className="container">
-          <h2 style={{ marginBottom: '2.5rem' }}>1. Process</h2>
+          <h2 style={{ marginBottom: '2.5rem', fontSize: 'clamp(1.9rem, 3.2vw, 2.6rem)' }}>2. Process</h2>
 
           <div style={{ display: 'grid', gridTemplateColumns: '260px 1fr', gap: '2.5rem', alignItems: 'start' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
@@ -224,106 +470,10 @@ const HowItWorks = ({ setCurrentPage }) => {
         </div>
       </section>
 
-      <div className="divider" />
-
-      {/* ── Correlation vs Causation ── */}
-      <section className="section" style={{ paddingTop: '3.5rem' }}>
-        <div className="container">
-          <h2 style={{ marginBottom: '1.25rem' }}>The Limits of Raw Counts</h2>
-          <p style={{ marginBottom: '2.5rem', maxWidth: 'none' }}>
-            Raw collision counts can mislead — when multiple factors move together, a simple tally cannot determine which one actually matters.
-          </p>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '2.5rem' }}>
-            <div className="card" style={{ borderLeft: '3px solid var(--red)' }}>
-              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--red)', marginBottom: '1rem' }}>
-                Traditional raw-count analysis
-              </div>
-              <p style={{ maxWidth: 'none', fontSize: '0.95rem', lineHeight: 1.8 }}>
-                "Pedestrian collisions and intersection collisions both rose 18% from 2015 to 2019,
-                and injuries rose alongside them — so intersections must be driving the injury increase."
-              </p>
-              <p style={{ maxWidth: 'none', fontSize: '0.85rem', marginTop: '0.75rem', fontStyle: 'italic' }}>
-                This ignores that pedestrian collisions are far more likely to happen at intersections
-                in the first place. The injury signal may come entirely from the pedestrian involvement,
-                not the intersection. Raw counts cannot separate the two.
-              </p>
-            </div>
-
-            <div className="card" style={{ borderLeft: '3px solid var(--green)' }}>
-              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--green)', marginBottom: '1rem' }}>
-                Logistic regression with 155 features
-              </div>
-              <p style={{ maxWidth: 'none', fontSize: '0.95rem', lineHeight: 1.8 }}>
-                "Even after controlling for crash location, time of day, and 154 other variables —
-                pedestrian involvement ranks as the strongest injury predictor in every one of
-                the 91 training windows, across all 15 years of data."
-              </p>
-              <p style={{ maxWidth: 'none', fontSize: '0.85rem', marginTop: '0.75rem', fontStyle: 'italic' }}>
-                All 155 features are considered simultaneously, isolating each
-                factor's independent contribution to injury probability.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Confusion Matrix ── */}
-      <section className="section" style={{ paddingTop: '4rem', borderTop: '1px solid var(--border)' }}>
-        <div className="container">
-          <div className="section-label">Model Performance</div>
-          <h2 style={{ marginBottom: '1rem' }}>Confusion matrix: pre vs. post COVID</h2>
-          <p style={{ marginBottom: '2.5rem', maxWidth: 'none' }}>
-            Averaged across all rolling 2-year windows. The shift reflects both fewer
-            true positives caught (lower recall) and a much higher rate of false positives
-            — the model became less precise in both directions.
-          </p>
-
-          <div style={{ border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', overflow: 'hidden', marginBottom: '2rem' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', background: 'var(--bg-card)', borderBottom: '1px solid var(--border)' }}>
-              {['Metric', 'Pre-COVID avg', 'Post-COVID avg', 'Delta'].map((h, i) => (
-                <div key={h} style={{ padding: '0.75rem 1.25rem', fontFamily: 'var(--font-mono)', fontSize: '0.6rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text-muted)', borderRight: i < 3 ? '1px solid var(--border)' : 'none' }}>{h}</div>
-              ))}
-            </div>
-            {cmMetrics.map((m, i) => (
-              <div key={m.label} style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', borderBottom: i < cmMetrics.length - 1 ? '1px solid var(--border-light)' : 'none' }}>
-                <div style={{ padding: '0.9rem 1.25rem', borderRight: '1px solid var(--border)' }}>
-                  <span style={{ fontFamily: 'var(--font-serif)', fontSize: '1rem', color: 'var(--text)' }}>{m.label}</span>
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: 'var(--text-muted)', marginLeft: '0.5rem' }}>({m.note})</span>
-                </div>
-                <div style={{ padding: '0.9rem 1.25rem', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', color: 'var(--text-sec)', borderRight: '1px solid var(--border)' }}>{m.pre}</div>
-                <div style={{ padding: '0.9rem 1.25rem', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', color: 'var(--text-sec)', borderRight: '1px solid var(--border)' }}>{m.post}</div>
-                <div style={{ padding: '0.9rem 1.25rem', fontFamily: 'var(--font-mono)', fontSize: '0.85rem', color: m.worse ? 'var(--red)' : 'var(--green)' }}>{m.delta}</div>
-              </div>
-            ))}
-          </div>
-
-          <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
-            <button
-              onClick={() => setCurrentPage('map')}
-              style={{
-                background: '#1a1a1a',
-                color: '#fff',
-                border: 'none',
-                borderRadius: 'var(--radius)',
-                padding: '0.85rem 2rem',
-                fontSize: '0.95rem',
-                fontFamily: 'var(--font-sans)',
-                cursor: 'pointer',
-                letterSpacing: '0.02em',
-              }}
-            >
-              Click to visualize the data on a Los Angeles map
-            </button>
-          </div>
-
-        </div>
-      </section>
-
       {/* ── Disclosures ── */}
       <section className="section" style={{ paddingTop: '3rem', borderTop: '1px solid var(--border)', background: 'var(--bg-subtle)' }}>
         <div className="container">
-          <h2 style={{ marginBottom: '2.5rem' }}>Disclosures and Limitations</h2>
+          <h2 style={{ marginBottom: '2.5rem', fontSize: 'clamp(1.9rem, 3.2vw, 2.6rem)' }}>Disclosures and Limitations</h2>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1.25rem' }}>
             {disclosures.map(d => (

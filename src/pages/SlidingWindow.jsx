@@ -104,7 +104,7 @@ const getEra = (trainStart, trainEnd, testYear) => {
 };
 
 const getEraDesc = (trainStart, trainEnd, testYear) => {
-  if (testYear <= 2020) return 'Pre-COVID models show peak predictive accuracy (83–86%). Collision patterns were stable.';
+  if (testYear <= 2020) return 'Pre-COVID models show predictive accuracy ranging from 74–90%. Collision patterns were stable.';
   if (testYear <= 2021) return 'COVID disrupted collision patterns. Empty roads led to higher speeds and new behaviors.';
   return 'Post-COVID stabilization. Recent-window models outperform 13-year historical models by ~8 points.';
 };
@@ -367,7 +367,7 @@ const SlidingWindow = ({ setCurrentPage }) => {
                 Each window trains the model only on collisions from the selected year range, then
                 tests it on the immediately following year — data the model has never seen. Before
                 training, all features are rescaled to a common scale so that large-range inputs
-                (like victim age) do not dominate small binary ones (like is_pedestrian). This means
+                (like victim age) do not dominate small binary ones (like is_hit_and_run). This means
                 the weights within a single window are internally consistent and directly comparable
                 to each other, but a weight from one window should not be compared numerically to the
                 same weight from a different window, since each window's scaling is fit independently.

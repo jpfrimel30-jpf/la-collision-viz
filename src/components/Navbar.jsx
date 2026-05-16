@@ -4,8 +4,8 @@ const Navbar = ({ currentPage, setCurrentPage }) => {
   const links = [
     { id: 'home',             label: 'Home' },
     { id: 'sliding-window',   label: 'Prediction Model' },
-    { id: 'formula-explorer', label: 'Injury Prediction Explorer' },
-    { id: 'process',          label: 'Process & Findings' },
+    { id: 'formula-explorer', label: 'Crash Scenario Explorer' },
+    { id: 'process',          label: 'Findings and Process' },
     { id: 'map',              label: 'Map' },
   ];
 

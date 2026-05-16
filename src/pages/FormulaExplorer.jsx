@@ -205,24 +205,24 @@ const FEATURE_GROUPS = [
 
 const PRESETS = [
   {
-    label: 'Hit-and-run — biggest shift',
+    label: 'Hit-and-run',
     ids: ['is_hit_and_run'],
     insight: 'The single largest weight change in the model: −1.45 pre-COVID → −0.15 post-COVID. The raw injury rate for hit-and-runs simultaneously doubled (22% → 47%). Two interpretations are both plausible and cannot be separated from this data alone: hit-and-runs may have genuinely become more dangerous post-COVID due to higher speeds and changed driver behavior, or LAPD may have shifted toward filing reports only for more serious hit-and-runs as capacity decreased — inflating the recorded injury rate without a change in actual danger. The model reports the weight shift; it cannot distinguish the cause.',
   },
   {
-    label: 'DUI — alcohol surge',
-    ids: ['is_dui_alcohol'],
-    insight: 'DUI alcohol bookings increased 7x post-COVID (235 → 1,687 in the training period) while the injury rate held constant at ~97%. The weight grew from +0.14 to +0.70 not because the relationship changed, but because the model saw far more evidence — a stronger gradient signal. The volume surge likely reflects both real increases in impaired driving and expanded LAPD enforcement of DUI laws post-pandemic.',
+    label: 'Unlicensed driver',
+    ids: ['is_unlicensed'],
+    insight: 'The model weight for unlicensed driver involvement held between +0.11 and +0.13 from 2017 through 2024 — essentially unchanged. Yet the raw injury rate fell from 80.3% to 57.1% over the same period. The raw rate declined because the crashes around unlicensed drivers changed, not because unlicensed drivers themselves became less dangerous. The model controls for everything else and finds a stable, persistent injury penalty that raw statistics obscure.',
   },
   {
-    label: 'Multi-vehicle flip',
-    ids: ['is_multi_vehicle'],
-    insight: 'Multi-vehicle crashes switched signs post-COVID — from injury-positive (+0.31) to near-neutral (+0.06). Changed post-COVID traffic patterns appear to have made multi-car collisions less severe on average relative to other crash types.',
+    label: 'Rush hour',
+    ids: ['is_rush_hour'],
+    insight: 'Rush hour (7–9am and 4–7pm) is one of the most counterintuitive results in the model. Despite being the time when roads are most congested and collisions most frequent, the injury weight has stayed effectively flat near zero across every training window — ranging between −0.001 and +0.024 with no directional trend. Congestion may actually limit severity by keeping speeds low.',
   },
   {
-    label: 'Pedestrian + weekend + late night',
-    ids: ['is_pedestrian', 'is_weekend', 'is_late_night'],
-    insight: 'Weekend weight more than doubled post-COVID (0.04 → 0.09). This scenario illustrates the compounded post-COVID signal for nighttime weekend pedestrian crashes.',
+    label: 'Late night crash',
+    ids: ['is_late_night'],
+    insight: 'Late night (10pm–4am) is the only time-of-day feature that shows a consistent, gradual upward trend across the full study period — growing from +0.046 in 2013 to +0.067 in 2024. The signal is real but modest: empty roads and potential impairment likely contribute to more serious outcomes, but the weight remains a fraction of what crash type or circumstances contribute.',
   },
 ];
 
@@ -310,7 +310,7 @@ export default function FormulaExplorer({ setCurrentPage }) {
 
         {/* Header */}
         <div style={{ marginBottom: '2.5rem', maxWidth: '680px' }}>
-          <h2 style={{ marginBottom: '1rem' }}>Injury Prediction Explorer: Build a crash scenario and compare</h2>
+          <h2 style={{ marginBottom: '1rem' }}>Crash Scenario Explorer</h2>
           <p>
             Toggle features to build a hypothetical crash. The model computes an injury probability
             from the selected features' weights and shows how that prediction would have differed
@@ -676,19 +676,19 @@ export default function FormulaExplorer({ setCurrentPage }) {
               <span><span style={{ color: 'var(--green)', fontWeight: 600 }}>+ weight</span> → increases injury probability</span>
               <span><span style={{ color: 'var(--red)', fontWeight: 600 }}>− weight</span> → decreases injury probability</span>
               <span style={{ marginTop: '0.4rem', opacity: 0.75, lineHeight: 1.5 }}>
-                <sup style={{ fontSize: '0.8em', verticalAlign: 'super', marginRight: '2px' }}>1</sup>
+                <sup style={{ fontSize: '0.8em', verticalAlign: 'super', marginRight: '2px', color: 'var(--text-sec)' }}>1</sup>
                 Baseline is era-specific: pre-COVID +{BIAS.pre.toFixed(4)}, post-COVID +{BIAS.post.toFixed(4)}. Derived from the 2016–2018 and 2021–2023 training windows respectively.
               </span>
               <span style={{ opacity: 0.75, lineHeight: 1.5 }}>
-                <sup style={{ fontSize: '0.8em', verticalAlign: 'super', marginRight: '2px' }}>2</sup>
+                <sup style={{ fontSize: '0.8em', verticalAlign: 'super', marginRight: '2px', color: 'var(--text-sec)' }}>2</sup>
                 Corridor features are derived from LAPD incident address strings. Sex and descent reflect the injured party or primary victim of the crash.
               </span>
               <span style={{ opacity: 0.75, lineHeight: 1.5 }}>
-                <sup style={{ fontSize: '0.8em', verticalAlign: 'super', marginRight: '2px' }}>3</sup>
+                <sup style={{ fontSize: '0.8em', verticalAlign: 'super', marginRight: '2px', color: 'var(--text-sec)' }}>3</sup>
                 DUI — alcohol and DUI — drugs bookings increased roughly 7x in the post-COVID period (2021–2023 vs 2016–2018), while injury rates for each remained nearly identical across eras. The weight changes reflect the volume of additional evidence the model was trained on, not a change in the underlying association.
               </span>
               <span style={{ opacity: 0.75, lineHeight: 1.5 }}>
-                <sup style={{ fontSize: '0.8em', verticalAlign: 'super', marginRight: '2px' }}>4</sup>
+                <sup style={{ fontSize: '0.8em', verticalAlign: 'super', marginRight: '2px', color: 'var(--text-sec)' }}>4</sup>
                 The Rampart, Newton, Northeast, Central, and Hollenbeck divisions recorded injury rates of 99–100% in the pre-COVID period, which is almost certainly a reporting artifact — those divisions likely filed formal reports only for crashes serious enough to result in injury, undercounting minor crashes. Weights for all five collapsed post-COVID as reported injury rates normalized to near the citywide average (43–53%).
               </span>
             </div>

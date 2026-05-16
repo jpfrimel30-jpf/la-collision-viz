@@ -310,6 +310,28 @@ const MapPage = ({ startYear, setStartYear, endYear, setEndYear, filter, setFilt
       <div className="map-container">
         <div ref={mapContainer} style={{ width: '100%', height: '100%' }} />
 
+        {/* Hint box */}
+        <div style={{
+          position: 'absolute',
+          top: '1rem',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: '20%',
+          background: '#fff',
+          borderRadius: '12px',
+          padding: '0.65rem 1rem',
+          zIndex: 10,
+          textAlign: 'center',
+          fontFamily: 'var(--font-sans)',
+          fontSize: '0.8rem',
+          color: '#333',
+          lineHeight: 1.5,
+          boxShadow: '0 2px 8px rgba(0,0,0,0.12)',
+          pointerEvents: 'none',
+        }}>
+          Zoom in closely to find specific car crashes and click on them to see what happened
+        </div>
+
         {/* Legend */}
         <div className="map-legend">
           <div className="map-legend-title">Clusters (zoomed out)</div>
