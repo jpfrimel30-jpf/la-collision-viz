@@ -307,7 +307,7 @@ const FindingsAndProcess = ({ setCurrentPage }) => {
       </section>
 
       {/* ── Findings ── */}
-      <section id="findings" className="section" style={{ paddingTop: '3.5rem', paddingBottom: '2.5rem' }}>
+      <section id="findings" className="section" style={{ paddingTop: '3.5rem', paddingBottom: '0' }}>
         <div className="container">
           <h2 style={{ marginBottom: '2.5rem', fontSize: 'clamp(1.9rem, 3.2vw, 2.6rem)' }}>1. Findings from Analysis</h2>
         </div>

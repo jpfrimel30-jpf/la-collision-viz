@@ -653,9 +653,8 @@ input[type="range"]::-webkit-slider-thumb {
   /* Explanation grid: stack on mobile */
   .explanation-grid { grid-template-columns: 1fr !important; }
 
-  /* Crash Scenario Explorer: stack left/right panels, remove sticky */
-  .explorer-grid { grid-template-columns: 1fr !important; }
-  .explorer-right { position: static !important; }
+  /* Crash Scenario Explorer: keep side-by-side, add right padding so content doesn't touch edge */
+  .explorer-right { padding-right: 0.75rem; }
 
   /* Stats grid: normalize padding/borders for 2-col layout */
   .home-stats-grid > div {
