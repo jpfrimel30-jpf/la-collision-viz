@@ -300,7 +300,7 @@ const FindingsAndProcess = () => {
       {/* ── Header ── */}
       <section className="section page-hero" style={{ paddingTop: '5rem', paddingBottom: '1.5rem', borderBottom: '1px solid var(--border)' }}>
         <div className="container">
-          <h1 style={{ marginBottom: '1.25rem', fontSize: 'clamp(2rem, 4vw, 3.5rem)' }}>Findings and Process</h1>
+          <h1 style={{ marginBottom: '1.25rem', fontSize: 'clamp(1.7rem, 3.5vw, 2.8rem)' }}>Findings and Process</h1>
           <p style={{ fontSize: '1.05rem', lineHeight: 1.8, maxWidth: 'none' }}>
             Below are the major findings that emerged from the analysis and a step-by-step account of how
             621,000 collision records were cleaned, prepared, and used to train a logistic regression model.
