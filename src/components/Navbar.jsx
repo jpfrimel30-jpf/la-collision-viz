@@ -1,41 +1,38 @@
 import React, { useState } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
 
-const Navbar = ({ currentPage, setCurrentPage }) => {
+const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   const links = [
-    { id: 'home',             label: 'Home' },
-    { id: 'sliding-window',   label: 'Prediction Model' },
-    { id: 'formula-explorer', label: 'Crash Scenario Explorer' },
-    { id: 'process',          label: 'Findings and Process' },
-    { id: 'map',              label: 'Map' },
+    { path: '/',                        label: 'Home' },
+    { path: '/prediction-model',        label: 'Prediction Model' },
+    { path: '/crash-scenario-explorer', label: 'Crash Scenario Explorer' },
+    { path: '/findings-and-process',    label: 'Findings and Process' },
   ];
 
-  const navigate = (id) => {
-    setCurrentPage(id);
-    setMenuOpen(false);
-  };
+  const closeMenu = () => setMenuOpen(false);
 
   return (
     <nav className="navbar">
       <div
         className="navbar-logo"
-        onClick={() => navigate('home')}
+        onClick={() => { navigate('/'); closeMenu(); }}
       >
         Los Angeles Car Crash Analysis
       </div>
 
       <ul className="navbar-links">
         {links.map(link => (
-          <li key={link.id} className={link.id === 'map' ? 'nav-hide' : ''}>
-            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-            <a
-              href="#"
-              className={currentPage === link.id ? 'active' : ''}
-              onClick={e => { e.preventDefault(); navigate(link.id); }}
+          <li key={link.path}>
+            <NavLink
+              to={link.path}
+              end={link.path === '/'}
+              className={({ isActive }) => isActive ? 'active' : ''}
             >
               {link.label}
-            </a>
+            </NavLink>
           </li>
         ))}
 
@@ -76,16 +73,17 @@ const Navbar = ({ currentPage, setCurrentPage }) => {
       {menuOpen && (
         <div className="nav-mobile-menu">
           {links.map(link => (
-            // eslint-disable-next-line jsx-a11y/anchor-is-valid
-            <a
-              key={link.id}
-              href="#"
-              className={currentPage === link.id ? 'active' : ''}
-              onClick={e => { e.preventDefault(); navigate(link.id); }}
+            <NavLink
+              key={link.path}
+              to={link.path}
+              end={link.path === '/'}
+              className={({ isActive }) => isActive ? 'active' : ''}
+              onClick={closeMenu}
             >
               {link.label}
-            </a>
+            </NavLink>
           ))}
+          <NavLink to="/map" onClick={closeMenu}>Map</NavLink>
           <div className="nav-mobile-external">
             <a href="https://github.com/jpfrimel30-jpf" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
             <a href="https://data.lacity.org/Transportation/Traffic-Collision-Data-from-2010-to-Present/d5tf-ez2w" target="_blank" rel="noopener noreferrer">LA Data ↗</a>

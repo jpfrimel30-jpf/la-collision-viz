@@ -1,8 +1,10 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import CarAnimation from '../components/CarAnimation';
 import GradientDescentViz from '../components/GradientDescentViz';
 
-const Home = ({ setCurrentPage }) => {
+const Home = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = React.useState(0);
 
   const tabs = ['The Dataset', 'Prediction & Analysis', 'How the Model Learns', 'The Trained Model'];
@@ -44,7 +46,7 @@ const Home = ({ setCurrentPage }) => {
               <div style={{ maxWidth: '58ch', display: 'flex', justifyContent: 'flex-end', marginBottom: '2.5rem' }}>
                 <button
                   onClick={() => {
-                    setCurrentPage('process');
+                    navigate('/findings-and-process');
                     setTimeout(() => document.getElementById('findings')?.scrollIntoView({ behavior: 'smooth' }), 100);
                   }}
                   style={{
@@ -264,7 +266,7 @@ const Home = ({ setCurrentPage }) => {
       <section className="section" style={{ paddingTop: '3rem', paddingBottom: '3rem' }}>
         <div className="container" style={{ textAlign: 'center' }}>
           <button
-            onClick={() => setCurrentPage('sliding-window')}
+            onClick={() => navigate('/prediction-model')}
             style={{
               background: '#1a1a1a',
               color: '#fff',

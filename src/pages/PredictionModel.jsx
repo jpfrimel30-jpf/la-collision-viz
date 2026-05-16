@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const PRECOMPUTED = {
   "2010-2011-2012":{accuracy:0.8333,features:[["is_parked_vehicle",-1.175],["is_hit_and_run",-0.9773],["area_Southeast",-0.9134],["is_pedestrian",0.8072],["grid_34.3_-118.6",-0.793],["grid_34.0_-118.35",-0.785],["is_fixed_object",-0.6808],["grid_34.25_-118.6",0.6114],["is_van_nuys_blvd",0.5861],["is_bike",0.5389],["grid_34.15_-118.45",-0.5386],["vict_age",0.499],["hour_of_day",-0.4611],["grid_34.05_-118.55",0.4333],["is_western_ave",0.4279],["grid_34.15_-118.2",-0.42],["is_rush_hour",0.4192],["grid_34.0_-118.3",-0.416],["grid_34.25_-118.35",-0.4054],["sex_M",-0.4017]]},
@@ -157,7 +158,8 @@ const FeatureBars = ({ features }) => {
   );
 };
 
-const PredictionModel = ({ setCurrentPage }) => {
+const PredictionModel = () => {
+  const navigate = useNavigate();
   const [trainStart, setTrainStart] = useState(2022);
   const [trainEnd,   setTrainEnd]   = useState(2023);
   const [testYear,   setTestYear]   = useState(2024);
@@ -376,7 +378,7 @@ const PredictionModel = ({ setCurrentPage }) => {
           </div>
           <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
             <button
-              onClick={() => setCurrentPage('formula-explorer')}
+              onClick={() => navigate('/crash-scenario-explorer')}
               style={{
                 background: '#1a1a1a',
                 color: '#fff',

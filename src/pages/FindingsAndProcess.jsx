@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 // ── Pipeline steps ────────────────────────────────────────────────────────────
 
@@ -289,7 +290,8 @@ const disclosures = [
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 
-const FindingsAndProcess = ({ setCurrentPage }) => {
+const FindingsAndProcess = () => {
+  const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(0);
 
   return (
@@ -395,7 +397,7 @@ const FindingsAndProcess = ({ setCurrentPage }) => {
 
           <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
             <button
-              onClick={() => setCurrentPage('map')}
+              onClick={() => navigate('/map')}
               style={{
                 background: '#1a1a1a',
                 color: '#fff',

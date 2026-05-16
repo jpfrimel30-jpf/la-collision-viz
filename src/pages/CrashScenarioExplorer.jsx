@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 // Era-specific intercepts from the 2016-2018 and 2021-2023 training windows
 const BIAS = { pre: 0.5154, post: 0.1845 };
@@ -231,7 +232,8 @@ const fmt = (n, d = 1) => (n * 100).toFixed(d) + '%';
 const fmtW = w => (w >= 0 ? '+' : '') + w.toFixed(4);
 const mono = { fontFamily: 'var(--font-mono)' };
 
-export default function CrashScenarioExplorer({ setCurrentPage }) {
+export default function CrashScenarioExplorer() {
+  const navigate = useNavigate();
   const [period, setPeriod]             = useState('post');
   const [active, setActive]             = useState(new Set());
   const [activePreset, setActivePreset] = useState(null);
@@ -694,7 +696,7 @@ export default function CrashScenarioExplorer({ setCurrentPage }) {
             </div>
             <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
               <button
-                onClick={() => setCurrentPage('process')}
+                onClick={() => navigate('/findings-and-process')}
                 style={{
                   background: '#1a1a1a',
                   color: '#fff',
