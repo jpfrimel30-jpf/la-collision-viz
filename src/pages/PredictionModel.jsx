@@ -200,7 +200,7 @@ const PredictionModel = ({ setCurrentPage }) => {
 
   return (
     <div style={{ paddingTop: '3.75rem' }}>
-      <section className="section" style={{ paddingTop: '5rem', paddingBottom: '3rem', borderBottom: '1px solid var(--border)' }}>
+      <section className="section page-hero" style={{ paddingTop: '5rem', paddingBottom: '3rem', borderBottom: '1px solid var(--border)' }}>
         <div className="container">
           <h1 style={{ marginBottom: '1.25rem', fontSize: 'clamp(1.8rem, 4vw, 3rem)' }}>Prediction Model Explorer</h1>
           <p style={{ marginBottom: '2rem', maxWidth: '62ch' }}>

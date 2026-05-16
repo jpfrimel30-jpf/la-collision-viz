@@ -306,7 +306,7 @@ export default function CrashScenarioExplorer({ setCurrentPage }) {
 
   return (
     <div style={{ paddingTop: '3.75rem', minHeight: '100vh', background: 'var(--bg)' }}>
-      <div className="container section">
+      <div className="container section page-hero">
 
         {/* Header */}
         <div style={{ marginBottom: '2.5rem', maxWidth: '680px' }}>

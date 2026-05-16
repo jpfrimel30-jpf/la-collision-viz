@@ -296,7 +296,7 @@ const FindingsAndProcess = ({ setCurrentPage }) => {
     <div style={{ paddingTop: '3.75rem' }}>
 
       {/* ── Header ── */}
-      <section className="section" style={{ paddingTop: '5rem', paddingBottom: '3rem', borderBottom: '1px solid var(--border)' }}>
+      <section className="section page-hero" style={{ paddingTop: '5rem', paddingBottom: '3rem', borderBottom: '1px solid var(--border)' }}>
         <div className="container">
           <h1 style={{ marginBottom: '1.25rem', fontSize: 'clamp(2rem, 4vw, 3.5rem)' }}>Findings and Process</h1>
           <p style={{ fontSize: '1.05rem', lineHeight: 1.8, maxWidth: 'none' }}>

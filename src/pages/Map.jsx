@@ -296,11 +296,13 @@ const Map = ({ startYear, setStartYear, endYear, setEndYear, filter, setFilter }
           </span>
           <span className="map-stat-label">Confirmed no injury</span>
         </div>
-        <div className="map-stat">
-          <span className="map-stat-number" style={{ color: 'var(--white-muted)' }}>
-            {(stats.total - stats.injury - stats.noinjury).toLocaleString()}
-          </span>
-          <span className="map-stat-label">Unknown</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0' }}>
+          <div className="map-stat">
+            <span className="map-stat-number" style={{ color: 'var(--white-muted)' }}>
+              {(stats.total - stats.injury - stats.noinjury).toLocaleString()}
+            </span>
+            <span className="map-stat-label">Unknown</span>
+          </div>
           <span className="map-hint-mobile">Zoom in &amp; click a crash for details</span>
         </div>
       </>
@@ -341,9 +343,9 @@ const Map = ({ startYear, setStartYear, endYear, setEndYear, filter, setFilter }
               <div className="map-legend-title" style={{ margin: 0 }}>Clusters (zoomed out)</div>
               <button
                 onClick={() => setLegendOpen(false)}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: 'var(--text-muted)', padding: 0 }}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-mono)', fontSize: '1rem', color: 'var(--text-muted)', padding: 0, lineHeight: 1 }}
               >
-                hide ×
+                ×
               </button>
             </div>
             <div className="map-legend-item">

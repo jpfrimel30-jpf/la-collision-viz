@@ -12,7 +12,7 @@ const Home = ({ setCurrentPage }) => {
     <div style={{ paddingTop: '3.75rem' }}>
 
       {/* ── Hero ── */}
-      <section className="section" style={{ paddingTop: '3rem', paddingBottom: '4rem', borderBottom: '1px solid var(--border)' }}>
+      <section className="section page-hero" style={{ paddingTop: '3rem', paddingBottom: '4rem', borderBottom: '1px solid var(--border)' }}>
         <div className="container">
           <div className="hero-grid">
 

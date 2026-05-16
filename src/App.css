@@ -616,23 +616,30 @@ input[type="range"]::-webkit-slider-thumb {
   .section { padding: 2.5rem 0; }
   .container { padding: 0 1.1rem; }
 
-  /* Navbar: hide desktop links, show hamburger */
-  .navbar { padding: 0.9rem 1.1rem; position: relative; }
+  /* Navbar: keep fixed/full-width, hide desktop links, show hamburger */
+  .navbar { padding: 0.9rem 1.1rem; }
   .navbar-links { display: none; }
   .nav-hamburger { display: flex; }
 
-  /* Hide desktop hint box, show inline hint in stats */
+  /* Reduce first-section top padding so title sits closer to navbar */
+  .page-hero { padding-top: 1.5rem !important; }
+
+  /* Hide desktop hint box, show inline hint next to Unknown stat */
   .map-hint-box { display: none !important; }
   .map-hint-mobile {
-    display: block;
+    display: inline-flex;
+    align-items: center;
     font-family: var(--font-mono);
     font-size: 0.55rem;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.05em;
     color: var(--text-muted);
-    margin-top: 0.3rem;
-    line-height: 1.4;
-    max-width: 120px;
-    text-align: right;
+    line-height: 1.35;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.2rem 0.45rem;
+    margin-left: 0.5rem;
+    white-space: normal;
+    max-width: 100px;
   }
 
   /* Explanation grid: stack on mobile */
