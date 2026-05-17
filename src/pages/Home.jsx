@@ -34,8 +34,8 @@ const Home = () => {
                 After completing a supervised machine learning introductory course from Stanford
                 and DeepLearning.AI, I wanted to apply what I learned to a real world data set.
                 I found that the Los Angeles Police Department has kept detailed public car crash
-                records for over a decade. This discovery led me to a simple question: can logistic
-                regression accurately predict whether a car crash results in an injury?
+                records for over a decade. This discovery led me to a simple question: <span style={{ textDecoration: 'underline', textDecorationColor: '#1A1A1A', textUnderlineOffset: '3px' }}>can logistic
+                regression accurately predict whether a car crash results in an injury?</span>
               </p>
               <p style={{ fontSize: '1.05rem', lineHeight: 1.8, marginBottom: '0.6rem', maxWidth: '58ch' }}>
                 Through my analysis, I discovered that predicting crash injuries became measurably

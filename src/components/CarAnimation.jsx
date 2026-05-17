@@ -44,7 +44,7 @@ const CarAnimation = () => {
     let hazards = [];
     let crashTarget = null;
     let otherTimer = 0;
-    let otherInterval = 90 + Math.random() * 60;
+    let otherInterval = 50 + Math.random() * 40;
     let hazardTimer = Math.floor((3 + Math.random() * 2) * 60);
     let laneTimer   = 120 + Math.floor(Math.random() * 180);
 
@@ -210,7 +210,7 @@ const CarAnimation = () => {
         if (otherTimer >= otherInterval) {
           spawnOther();
           otherTimer = 0;
-          otherInterval = 70 + Math.random() * 100;
+          otherInterval = 40 + Math.random() * 60;
         }
         hazardTimer--;
         if (hazardTimer <= 0) {
