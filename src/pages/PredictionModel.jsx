@@ -105,7 +105,7 @@ const getEra = (trainStart, trainEnd, testYear) => {
 };
 
 const getEraDesc = (trainStart, trainEnd, testYear) => {
-  if (testYear <= 2020) return 'Pre-COVID models show predictive accuracy ranging from 74–90%. Collision patterns were stable.';
+  if (testYear <= 2020) return 'Pre-COVID models show strong predictive accuracy. Collision patterns were stable.';
   if (testYear <= 2021) return 'COVID disrupted collision patterns. Empty roads led to higher speeds and new behaviors.';
   return 'Post-COVID stabilization. Recent-window models outperform 13-year historical models by ~8 points.';
 };
@@ -240,7 +240,7 @@ const PredictionModel = () => {
           </div>
 
           <p style={{ marginBottom: '0.75rem', maxWidth: '62ch', fontSize: '0.95rem' }}>
-            <strong>Accuracy:</strong> the share of test-year collisions the model correctly classified as injury or no injury — out of crashes it had never seen during training.
+            <strong>Accuracy:</strong> the share of test-year collisions the model correctly classified as injury or no injury out of crashes it had never seen during training.
           </p>
         </div>
       </section>
@@ -295,6 +295,7 @@ const PredictionModel = () => {
                     const ne = +e.target.value;
                     setTrainEnd(ne);
                     setTestYear(ne + 1);
+                    if (ne <= trainStart) setTrainStart(ne - 1);
                   }}>
                     {YEARS.slice(1, -1).map(y => <option key={y} value={y}>{y}</option>)}
                   </select>

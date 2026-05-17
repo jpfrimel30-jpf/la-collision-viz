@@ -691,7 +691,7 @@ export default function CrashScenarioExplorer() {
               </span>
               <span style={{ opacity: 0.75, lineHeight: 1.5 }}>
                 <sup style={{ fontSize: '0.8em', verticalAlign: 'super', marginRight: '2px', color: 'var(--text-sec)' }}>4</sup>
-                The Rampart, Newton, Northeast, Central, and Hollenbeck divisions recorded injury rates of 99–100% in the pre-COVID period, which is almost certainly a reporting artifact — those divisions likely filed formal reports only for crashes serious enough to result in injury, undercounting minor crashes. Weights for all five collapsed post-COVID as reported injury rates normalized to near the citywide average (43–53%).
+                The Rampart, Newton, Northeast, Central, and Hollenbeck divisions recorded injury rates of 99–100% in the pre-COVID period, which is almost certainly a reporting artifact. Those divisions likely filed formal reports only for crashes serious enough to result in injury, undercounting minor crashes. Weights for all five collapsed post-COVID as reported injury rates normalized to near the citywide average (43–53%).
               </span>
             </div>
             <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
