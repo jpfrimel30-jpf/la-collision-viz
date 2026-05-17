@@ -507,9 +507,17 @@ input[type="range"]::-webkit-slider-thumb {
   .gd-grid           { grid-template-columns: 1fr !important; }
 }
 
-/* Small phone: hide animation (420px canvas too wide), single-column everything */
+/* Small phone: scale animation to fit, single-column everything */
 @media (max-width: 520px) {
-  .hero-animation    { display: none !important; }
+  .hero-animation {
+    display: flex !important;
+    justify-content: center;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    transform: scale(0.72);
+    transform-origin: top center;
+    margin-bottom: -150px;
+  }
   .home-findings-grid { grid-template-columns: 1fr !important; }
   .home-ml-grid      { grid-template-columns: 1fr !important; }
   .feature-bar-item  { grid-template-columns: 110px 1fr 50px; }
