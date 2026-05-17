@@ -13,3 +13,7 @@ The site includes an interactive prediction model, crash scenario explorer, find
 ---
 
 Built with React and deployed on Vercel. The vast majority of the code was written with [Claude Code](https://claude.ai/code), Anthropic's AI coding assistant, under my direction and oversight.
+
+---
+
+Favicon icon by [Freepik](https://www.freepik.com) via [Flaticon](https://www.flaticon.com).
