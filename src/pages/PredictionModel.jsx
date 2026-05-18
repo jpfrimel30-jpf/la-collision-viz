@@ -118,9 +118,14 @@ const ENGINEERED_ZONES = new Set([
 ]);
 
 const HIDDEN_FEATURES = new Set([
-  'hour_of_day',  // raw 0-23 hour; less interpretable than engineered time flags
-  'vict_age',     // continuous raw field; ambiguous as a standalone predictor
-  'descent_X',    // X = unknown/unrecorded descent — not a meaningful category
+  'hour_of_day',      // raw 0-23 hour; less interpretable than engineered time flags
+  'vict_age',         // continuous raw field; ambiguous as a standalone predictor
+  'descent_X',        // X = unknown/unrecorded descent — not a meaningful category
+  'area_Rampart',     // data irregularity in LAPD reporting for these divisions
+  'area_Newton',
+  'area_Northeast',
+  'area_Central',
+  'area_Hollenbeck',
 ]);
 
 const FeatureBars = ({ features }) => {
