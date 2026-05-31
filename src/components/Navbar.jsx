@@ -40,7 +40,7 @@ const Navbar = () => {
         <li>
           <div className="navbar-external">
             <a
-              href="https://github.com/jpfrimel30-jpf?tab=repositories"
+              href="https://github.com/jpfrimel?tab=repositories"
               target="_blank"
               rel="noopener noreferrer"
               className="navbar-btn"
@@ -86,7 +86,7 @@ const Navbar = () => {
           ))}
 
           <div className="nav-mobile-external">
-            <a href="https://github.com/jpfrimel30-jpf?tab=repositories" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+            <a href="https://github.com/jpfrimel?tab=repositories" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
             <a href="https://data.lacity.org/Transportation/Traffic-Collision-Data-from-2010-to-Present/d5tf-ez2w" target="_blank" rel="noopener noreferrer">LA Data ↗</a>
           </div>
         </div>

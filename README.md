@@ -4,7 +4,7 @@ An interactive data visualization built with React, exploring logistic regressio
 
 **Live site:** [la-carcrash.com](https://www.la-carcrash.com)
 
-**Analysis and data pipeline:** [github.com/jpfrimel30-jpf/la_collisions](https://github.com/jpfrimel30-jpf/la_collisions)
+**Analysis and data pipeline:** [github.com/jpfrimel/la_collisions](https://github.com/jpfrimel/la_collisions)
 
 ---
 
